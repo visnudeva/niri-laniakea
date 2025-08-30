@@ -1,0 +1,72 @@
+* {
+    border: none;
+    border-radius: 25px;
+    font-family: JetBrainsMono Nerd Font, monospace;
+    font-weight: bold;
+    font-size: 14px;
+    min-height: 0px;
+}
+
+window#waybar {
+	border: none;
+    background: rgba(122, 22, 116, 0);
+    color: #141414;
+}
+
+#window{
+	background: none;
+	color: #7a1674;  
+	border-radius: 10px;
+    padding: 0px 10px;
+    margin: 5px 0px;
+    margin-top: 5px;
+}
+
+#clock,
+#idle_inhibitor,
+#battery,
+#pulseaudio,
+#tray,
+#backlight {
+    background: #141414;
+    padding: 0px 10px;
+    margin: 5px 0px;
+    margin-top: 5px;
+}
+
+#clock {
+    color: #7a1674;
+    border-radius: 10px 10px 10px 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#idle_inhibitor {
+	color: #7a1674;
+	padding: 0px 5px;
+    border-radius: 10px;
+}
+
+#battery {
+    color: #7a1674;
+    border-radius: 10px 0px 0px 10px;
+    margin-left: 20px;
+}
+
+#backlight {
+    color: #7a1674;
+    border-radius: 0px 0px 0px 0px;
+}
+
+#pulseaudio {
+	color: #7a1674;
+    border-radius: 0px 10px 10px 0px;
+}
+
+#tray {
+	background: rgba(122, 22, 116, 0.3);
+	color: #7a1674;
+    border-radius: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+}

@@ -1,0 +1,11 @@
+max-visible=3
+layer=overlay
+font=JetBrainsMono Nerd Font 14
+background-color=#141414F0
+text-color=#7a1674F0
+border-color=#7a1674F0
+border-radius=7
+max-icon-size=1
+default-timeout=1000
+anchor=top-center
+margin=20
