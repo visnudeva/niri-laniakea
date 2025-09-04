@@ -19,6 +19,7 @@ The main keybindings are:
     - Mod+L swaylock (lock)
     - Mod+E fuzzel (logout menu)
     - Mod+W waybar (show/hide)
+    - Mod+M maximise/minimise window (100%/50% width)
 
 
 **Here are some screenshots**
