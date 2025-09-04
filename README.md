@@ -1,4 +1,4 @@
-*>>>*next, fix the install scripts, add other colors, fix and upload the theme switcher>>>**
+**>>>NEXT>>>, test the install script, add other colors, fix and upload the theme switcher**
 
 **A simple minimalist Niri theme dotfiles setup for Arch linux based distros.**
 
