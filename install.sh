@@ -11,7 +11,7 @@ BLUE="\033[0;34m"
 NC="\033[0m"
 
 # --- Logging ---
-LOG_FILE="$HOME/niri70s_install_$(date +%Y%m%d_%H%M%S).log"
+LOG_FILE="$HOME/niri-laniakea-themes_$(date +%Y%m%d_%H%M%S).log"
 log() {
     echo -e "${YELLOW}$@${NC}" | tee -a "$LOG_FILE"
 }
@@ -26,17 +26,17 @@ log_info() {
 }
 
 # --- Variables ---
-REPO_URL="https://github.com/visnudeva/Niri70S"
-CLONE_DIR="${HOME}/Niri70S"
+REPO_URL="https://github.com/visnudeva/niri-laniakea-themes"
+CLONE_DIR="${HOME}/niri-laniakea-themes"
 CONFIG_SOURCE="${CLONE_DIR}/.config"
 CONFIG_TARGET="${HOME}/.config"
-WALLPAPER_NAME="LavaLampOne.png"
+WALLPAPER_NAME="Laniakea.png"
 WALLPAPER_SOURCE="${CLONE_DIR}/backgrounds/${WALLPAPER_NAME}"
 WALLPAPER_DEST="${HOME}/.config/backgrounds/${WALLPAPER_NAME}"
 BACKUP_DIR="${HOME}/.config_backup_$(date +%Y%m%d_%H%M%S)"
 # SDDM theme and config paths
-SDDM_THEME_SOURCE="${CLONE_DIR}/sddm/Niri70S"
-SDDM_THEME_DEST="/usr/share/sddm/themes/Niri70S"
+SDDM_THEME_SOURCE="${CLONE_DIR}/sddm/Laniakea-purple"
+SDDM_THEME_DEST="/usr/share/sddm/themes/Laniakea-purple"
 SDDM_CONF_SOURCE="${CLONE_DIR}/sddm/sddm.conf"
 SDDM_CONF_DEST="/etc/sddm.conf"
 DRYRUN=0
@@ -415,7 +415,7 @@ dryrun_summary() {
 uninstall() {
     log_info "[+] Uninstalling Niri70S setup..."
     if (( DRYRUN )); then
-        DRYRUN_SUMMARY+=("Would uninstall Niri70S, restore backup, remove all installed packages and dotfiles")
+        DRYRUN_SUMMARY+=("Would uninstall niri-laniakea-themes, restore backup, remove all installed packages and dotfiles")
     else
         # Remove dotfiles
         rm -rf "$CONFIG_TARGET"
@@ -506,7 +506,7 @@ main() {
     post_install_checks
     dryrun_summary
 
-    log_success "\nAll done! Niri70S setup is complete, you now have a fresh Niri installation with its dotfiles and a beautiful wallpaper. Enjoy your new sleek system!\n"
+    log_success "\nAll done! niri-laniakea-themes setup is complete, you now have a fresh Niri installation with its dotfiles and a beautiful wallpaper. Enjoy your new sleek system!\n"
 }
 
 main
