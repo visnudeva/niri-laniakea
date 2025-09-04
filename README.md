@@ -2,7 +2,7 @@
 
 **A simple, clean and minimalist Niri theme dotfiles setup for Arch linux based distros.**
 
-Here is my install script.
+Here is the install script.
 
 <pre>git clone --depth=1 https://github.com/visnudeva/niri-laniakea-themes.git ~/Niri70S
 cd ~/niri-laniakea-themes
