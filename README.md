@@ -2,14 +2,14 @@
 
 **A simple, clean and minimalist Niri theme dotfiles setup for Arch linux based distros.**
 
-Here is the install script.
+Install script:
 
 <pre>git clone --depth=1 https://github.com/visnudeva/niri-laniakea-themes.git ~/Niri70S
 cd ~/niri-laniakea-themes
 chmod +x install.sh
 ./install.sh</pre>
 
-The main keybindings are:
+Main keybindings:
      
     - Mod+K kitty (terminal)
     - Mod+G geany (IDE)
@@ -22,7 +22,7 @@ The main keybindings are:
     - Mod+M maximise/minimise window (100%/50% width)
 
 
-**Here are some screenshots**
+Screenshots:
 
 ![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot1.png)
 ![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot2.png)
