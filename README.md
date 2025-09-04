@@ -4,8 +4,8 @@
 
 Here is my install script.
 
-<pre>git clone --depth=1 https://github.com/visnudeva/Niri70S.git ~/Niri70S
-cd ~/Niri70S
+<pre>git clone --depth=1 https://github.com/visnudeva/niri-laniakea-themes.git ~/Niri70S
+cd ~/niri-laniakea-themes
 chmod +x install.sh
 ./install.sh</pre>
 
@@ -23,5 +23,5 @@ The main keybindings are:
 
 **Here are some screenshots**
 
-![screenshot1](https://github.com/visnudeva/Niri70S/blob/main/Screenshot1.png?raw=true)
-![screenshot2](https://github.com/visnudeva/Niri70S/blob/main/Screenshot2.png?raw=true)
+![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot1.png)
+
