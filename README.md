@@ -11,11 +11,11 @@ chmod +x install.sh
 
 Main keybindings:
      
-    - Mod+K kitty (terminal)
-    - Mod+G geany (IDE)
+    - Mod+T kitty (terminal)
+    - Mod+I geany (IDE)
     - Mod+SPACE fuzzel (app launcher)
-    - Mod+F firefox (web browser)
-    - Mod+T thunar (file manager)
+    - Mod+B firefox (web browser)
+    - Mod+F thunar (file manager)
     - Mod+L swaylock (lock)
     - Mod+E fuzzel (logout menu)
     - Mod+W waybar (show/hide)
