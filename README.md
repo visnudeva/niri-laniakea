@@ -4,8 +4,8 @@
 
 Install script:
 
-<pre>git clone --depth=1 https://github.com/visnudeva/niri-laniakea-themes.git ~/Niri70S
-cd ~/niri-laniakea-themes
+<pre>git clone --depth=1 https://github.com/visnudeva/niri-laniakea.git ~/niri-laniakea
+cd ~/niri-laniakea
 chmod +x install.sh
 ./install.sh</pre>
 
