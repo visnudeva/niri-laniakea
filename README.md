@@ -26,4 +26,5 @@ Screenshots:
 
 ![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot1.png)
 ![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot2.png)
+![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot3.png)
 
