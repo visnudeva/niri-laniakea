@@ -1,6 +1,6 @@
 **>>>TO DO NEXT>>>**, test the install script, add the other colors then fix and upload the theme switcher script
 
-**A simple, clean and minimalist Niri theme dotfiles setup for Arch linux based distros.**
+**A simple, clean and minimalist Niri theme dotfiles setup for Arch linux based distros with the Laniakea wallpaper generator.**
 
 Install script:
 
