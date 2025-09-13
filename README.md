@@ -1,4 +1,4 @@
-**>>>TO DO NEXT>>>**, test the install script
+**>>>TO DO NEXT>>>**, add wallpaper generator script, test the install script
 
 **A simple, clean and minimalist Niri theme dotfiles setup for Arch linux based distros with the Laniakea wallpaper generator.**
 
