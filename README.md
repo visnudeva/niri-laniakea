@@ -16,7 +16,7 @@ Main keybindings:
     - Mod+SPACE fuzzel (app launcher)
     - Mod+B firefox (web browser)
     - Mod+F thunar (file manager)
-    - Mod+L swaylock (lock)
+    - Mod+L generate new Laniakea wallpaper
     - Mod+E fuzzel (logout menu)
     - Mod+W waybar (show/hide)
     - Mod+M maximise/minimise window (100%/50% width)
