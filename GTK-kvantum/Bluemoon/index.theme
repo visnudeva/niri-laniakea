@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Laniakea-Bluemoon
+Comment=A beautiful GTK theme with light and dark color schemes
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Laniakea-Bluemoon
+MetacityTheme=Laniakea-Bluemoon
+IconTheme=Laniakea-Bluemoon
+CursorTheme=Laniakea-Bluemoon-cursors
+ButtonLayout=close,minimize,maximize:menu
