@@ -1,4 +1,5 @@
-**A simple, clean and minimalist Niri theme dotfiles setup for Arch linux based distros with my Laniakea wallpaper generator which will generate a unique laniakea wallpaper at every boot or when reloaded with MOD+L4 and 4 Laniakea GTK and kvantum themes, the default theme being Cybersakura.**
+**A clean, minimalist Niri dotfiles setup for Arch-based Linux distributions.
+This setup includes an install script for Niri, Fuzzel, Mako, Waybar, Kitty, and Swaylock, along with my Laniakea wallpaper generator, which creates a unique wallpaper at every boot or whenever reloaded with Mod+L4. It also comes with four Laniakea GTK and Kvantum themes, with Cybersakura set as the default.**
 
 Install script:
 
@@ -19,10 +20,10 @@ Main keybindings:
     - Mod+W waybar (show/hide)
     - Mod+M maximise/minimise window (100%/50% width)
 
-Bluemoon:
+Cybersakura:
 ![screenshot4](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot4.png)
 
-Cybersakura:
+Bluemoon:
 ![screenshot5](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot5.png)
 
 Duskrose:
