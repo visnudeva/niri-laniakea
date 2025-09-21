@@ -1,0 +1,348 @@
+#!/bin/bash
+
+# Laniakea Live Wallpaper Installation Script for Arch Linux
+# This script installs and configures the Laniakea live wallpaper system
+
+set -e  # Exit on any error
+
+echo "=== Laniakea Live Wallpaper Installation Script ==="
+echo "This script will install and configure the Laniakea live wallpaper on Arch Linux"
+echo
+
+# Check if running on Arch Linux
+if ! grep -q "Arch Linux" /etc/os-release 2>/dev/null; then
+    echo "Warning: This script is designed for Arch Linux. You may need to modify it for your distribution."
+    read -p "Continue anyway? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Installation cancelled."
+        exit 1
+    fi
+fi
+
+# Check if running as root (some operations might need sudo)
+if [ "$EUID" -eq 0 ]; then
+    echo "Please run this script as a regular user, not as root."
+    exit 1
+fi
+
+# Install required packages
+echo "Installing required packages..."
+sudo pacman -Syu --noconfirm --needed \
+    chromium \
+    swww \
+    wget \
+    curl
+
+# Create necessary directories
+echo "Creating directories..."
+mkdir -p ~/.config/systemd/user
+mkdir -p ~/Pictures/Wallpapers
+
+# Download and install the HTML files
+echo "Installing HTML files..."
+
+# Main index.html (for direct viewing)
+cat > ~/Pictures/Wallpapers/index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Laniakea Still</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
+</head>
+<body>
+
+<script>
+  // Global variables
+  let points = [];
+  let mult = 0.005;
+
+  let r1, r2, g1, g2, b1, b2;
+
+  // Limit for how many frames to draw before saving
+  let frameCountLimit = 500;
+
+  function setup() {
+    createCanvas(windowWidth, windowHeight);
+    background(20);
+    angleMode(DEGREES);
+    noiseDetail(1);
+
+    points = [];
+    let density = 50;
+    let space = height / density;
+
+    for (let x = 0; x < width; x += space / 2) {
+      for (let y = 0; y < height; y += space * 2) {
+        let p = createVector(x + random(-100, 100), y + random(-100, 100));
+        points.push(p);
+      }
+    }
+
+    r1 = random(255);
+    r2 = random(255);
+    g1 = random(255);
+    g2 = random(255);
+    b1 = random(255);
+    b2 = random(255);
+
+    mult = random(0.002, 0.01);
+  }
+
+  function draw() {
+    noStroke();
+    for (let i = 0; i < points.length; i++) {
+      let r = map(points[i].x, 0, width, r1, r2);
+      let g = map(points[i].x, 0, height, g1, g2);
+      let b = map(points[i].x, 0, width, b1, b2);
+
+      let alpha = map(dist(width / 2, height / 2, points[i].x, points[i].y), 0, height / 2, 255, 0);
+      fill(r, g, b, alpha);
+
+      let angle = map(noise(points[i].x * mult, points[i].y * mult), 0, 1, 0, 720);
+      points[i].add(createVector(cos(angle), sin(angle)));
+
+      const centralAreaDivisor = window.innerWidth > 768 ? 3 : 4.5;
+      if (dist(width / 2, height / 2, points[i].x, points[i].y) < height / centralAreaDivisor) {
+        ellipse(points[i].x, points[i].y, 0.5);
+      }
+    }
+
+    // After enough frames, save and stop
+    if (frameCount > frameCountLimit) {
+      saveCanvas("Laniakea", "png");
+      noLoop();
+      // Exit after a short delay so the PNG is written properly
+      setTimeout(() => {
+        window.close();
+      }, 500);
+    }
+  }
+
+  function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+  }
+</script>
+
+</body>
+</html>
+EOF
+
+# Headless version for wallpaper generation
+cat > ~/Pictures/Wallpapers/headless-index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Laniakea Still</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: rgb(20, 20, 20);
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
+</head>
+<body>
+
+<script>
+  // Global variables
+  let points = [];
+  let mult = 0.005;
+
+  let r1, r2, g1, g2, b1, b2;
+
+  function setup() {
+    createCanvas(windowWidth, windowHeight);
+    background(20);
+    angleMode(DEGREES);
+    noiseDetail(1);
+
+    points = [];
+    let density = 50;
+    let space = height / density;
+
+    for (let x = 0; x < width; x += space / 2) {
+      for (let y = 0; y < height; y += space * 2) {
+        let p = createVector(x + random(-100, 100), y + random(-100, 100));
+        points.push(p);
+      }
+    }
+
+    r1 = random(255);
+    r2 = random(255);
+    g1 = random(255);
+    g2 = random(255);
+    b1 = random(255);
+    b2 = random(255);
+
+    mult = random(0.002, 0.01);
+    
+    // Render the complete pattern immediately for headless mode
+    renderCompletePatternForHeadless();
+    
+    // Stop the animation loop since we're done
+    noLoop();
+  }
+
+  function renderCompletePatternForHeadless() {
+    noStroke();
+    
+    // For each point, simulate the full animation path and draw dots along it
+    for (let i = 0; i < points.length; i++) {
+      // Create a copy of the point to track its path
+      let currentPoint = points[i].copy();
+      
+      // Get the color for this point
+      let r = map(points[i].x, 0, width, r1, r2);
+      let g = map(points[i].x, 0, height, g1, g2);
+      let b = map(points[i].x, 0, width, b1, b2);
+      
+      // Simulate the animation by moving the point and drawing dots along its path
+      for (let step = 0; step < 300; step++) {
+        let angle = map(noise(currentPoint.x * mult, currentPoint.y * mult), 0, 1, 0, 720);
+        currentPoint.add(createVector(cos(angle), sin(angle)));
+        
+        // Draw a dot at this position if it's in the central area
+        const centralAreaDivisor = window.innerWidth > 768 ? 3 : 4.5;
+        if (dist(width / 2, height / 2, currentPoint.x, currentPoint.y) < height / centralAreaDivisor) {
+          let alpha = map(dist(width / 2, height / 2, currentPoint.x, currentPoint.y), 0, height / 2, 255, 0);
+          fill(r, g, b, alpha);
+          ellipse(currentPoint.x, currentPoint.y, 0.5);
+        }
+      }
+    }
+  }
+
+  function draw() {
+    // This will never be called because we call noLoop() in setup()
+  }
+
+  function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+  }
+</script>
+
+</body>
+</html>
+EOF
+
+# Create systemd service files
+echo "Creating systemd service files..."
+
+# swww daemon service
+cat > ~/.config/systemd/user/swww-daemon.service << 'EOF'
+[Unit]
+Description=Wayland wallpaper daemon (swww)
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/swww-daemon
+Restart=always
+
+[Install]
+WantedBy=graphical-session.target
+EOF
+
+# Wallpaper generation service
+cat > ~/.config/systemd/user/wallpaper.service << 'EOF'
+[Unit]
+Description=Generate random wallpaper with Chromium and set via swww
+After=graphical-session.target swww-daemon.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sleep 5
+
+# Generate a new wallpaper PNG with proper window size
+ExecStart=/usr/bin/chromium --headless=new --disable-gpu --screenshot=/tmp/Laniakea.png --virtual-time-budget=60000 --timeout=120000 --window-size=1920,1080 file:///home/$USER/Pictures/Wallpapers/headless-index.html
+
+# Set it as wallpaper
+ExecStartPost=/usr/bin/swww img /tmp/Laniakea.png
+
+[Install]
+WantedBy=graphical-session.target
+EOF
+
+# Create timer to generate wallpaper at boot (no recurring updates)
+cat > ~/.config/systemd/user/wallpaper.timer << 'EOF'
+[Unit]
+Description=Timer to generate wallpaper at boot
+Requires=wallpaper.service
+
+[Timer]
+# OnBootSec=1min
+
+[Install]
+WantedBy=timers.target
+EOF
+
+# Enable and start services
+echo "Enabling and starting services..."
+
+# Reload systemd configuration
+systemctl --user daemon-reload
+
+# Enable services
+systemctl --user enable swww-daemon.service
+systemctl --user enable wallpaper.timer
+
+# Start services
+systemctl --user start swww-daemon.service
+# Only start the timer (which runs once at boot), not the service directly
+systemctl --user start wallpaper.timer
+
+# Generate initial wallpaper
+echo "Generating initial wallpaper..."
+systemctl --user start wallpaper.service
+
+echo
+echo "=== Installation Complete ==="
+echo
+echo "The Laniakea live wallpaper system has been installed and configured!"
+echo
+echo "Services installed:"
+echo "  - swww-daemon.service: Manages the wallpaper daemon"
+echo "  - wallpaper.service: Generates and sets the wallpaper"
+echo "  - wallpaper.timer: Generates wallpaper once at boot"
+echo
+echo "Files installed:"
+echo "  - ~/Pictures/Wallpapers/index.html: Main HTML file for direct viewing"
+echo "  - ~/Pictures/Wallpapers/headless-index.html: Optimized version for headless generation"
+echo "  - ~/.config/systemd/user/swww-daemon.service"
+echo "  - ~/.config/systemd/user/wallpaper.service"
+echo "  - ~/.config/systemd/user/wallpaper.timer"
+echo
+echo "To manually update the wallpaper at any time, run:"
+echo "  systemctl --user start wallpaper.service"
+echo
+echo "The wallpaper will automatically update once at boot."
+echo "To disable automatic boot updates, run:"
+echo "  systemctl --user stop wallpaper.timer"
+echo "  systemctl --user disable wallpaper.timer"
+echo
+echo "Enjoy your organic, root-like Laniakea live wallpaper!"
