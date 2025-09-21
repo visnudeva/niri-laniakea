@@ -20,21 +20,21 @@ Main keybindings:
     - Mod+M maximise/minimise window (100%/50% width)
 
 Bluemoon:
-![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot4.png)
+![screenshot4](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot4.png)
 
 Cybersakura:
-![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot5.png)
+![screenshot5](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot5.png)
 
 Duskrose:
-![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot6.png)
+![screenshot6](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot6.png)
 
 Shadowfern:
-![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot7.png)
+![screenshot7](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot7.png)
 
 
 Screenshots:
 
 ![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot1.png)
-![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot2.png)
-![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot3.png)
+![screenshot2](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot2.png)
+![screenshot3](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot3.png)
 
