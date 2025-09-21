@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=Laniakea-Bluemoon-Kvantum
+Comment=Laniakea-Bluemoon Kvantum theme based on Laniakea-Bluemoon-GTK
+X-KDE-PluginInfo-Author=Qwen Code
+X-KDE-PluginInfo-Email=qwen@example.com
+X-KDE-PluginInfo-Name=Laniakea-Bluemoon-Kvantum
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=https://github.com/qwen
+X-KDE-PluginInfo-Category=Kvantum
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPLv3
+X-KDE-PluginInfo-EnabledByDefault=false
+
+[General]
+Theme=Laniakea-Bluemoon-Kvantum
