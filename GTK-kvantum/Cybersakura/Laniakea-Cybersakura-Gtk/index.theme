@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Laniakea-Cybersakura
+Comment=A beautiful GTK theme with light and dark color schemes
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Laniakea-Cybersakura
+MetacityTheme=Laniakea-Cybersakura
+IconTheme=Laniakea-Cybersakura
+CursorTheme=Laniakea-Cybersakura-cursors
+ButtonLayout=close,minimize,maximize:menu
