@@ -21,6 +21,20 @@ Main keybindings:
     - Mod+W waybar (show/hide)
     - Mod+M maximise/minimise window (100%/50% width)
 
+I included in the script my wallpaper generator which will generate a unique laniakea wallpaper at every boot or when reloaded with MOD+L4 and 4 Laniakea GTK and kvantum themes:
+
+Bluemoon:
+![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot4.png)
+
+Cybersakura:
+![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot5.png)
+
+Duskrose:
+![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot6.png)
+
+Shadowfern:
+![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot7.png)
+
 
 Screenshots:
 
