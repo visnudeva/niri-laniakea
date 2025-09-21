@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Laniakea-Duskrose
+Comment=A beautiful GTK theme with light and dark color schemes
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Laniakea-Duskrose
+MetacityTheme=Laniakea-Duskrose
+IconTheme=Laniakea-Duskrose
+CursorTheme=Laniakea-Duskrose-cursors
+ButtonLayout=close,minimize,maximize:menu
