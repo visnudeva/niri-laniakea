@@ -1,6 +1,4 @@
-**>>>TO DO NEXT>>>**, add wallpaper generator script, test the install script
-
-**A simple, clean and minimalist Niri theme dotfiles setup for Arch linux based distros with the Laniakea wallpaper generator.**
+**A simple, clean and minimalist Niri theme dotfiles setup for Arch linux based distros with my Laniakea wallpaper generator which will generate a unique laniakea wallpaper at every boot or when reloaded with MOD+L4 and 4 Laniakea GTK and kvantum themes, the default theme being Cybersakura.**
 
 Install script:
 
@@ -20,8 +18,6 @@ Main keybindings:
     - Mod+E fuzzel (logout menu)
     - Mod+W waybar (show/hide)
     - Mod+M maximise/minimise window (100%/50% width)
-
-I included in the script my wallpaper generator which will generate a unique laniakea wallpaper at every boot or when reloaded with MOD+L4 and 4 Laniakea GTK and kvantum themes:
 
 Bluemoon:
 ![screenshot1](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot4.png)
