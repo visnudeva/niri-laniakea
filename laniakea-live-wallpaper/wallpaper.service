@@ -1,0 +1,16 @@
+[Unit]
+Description=Generate random wallpaper with Chromium and set via swww
+After=graphical-session.target swww-daemon.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sleep 0.3
+
+# Generate a new wallpaper PNG with proper window size
+ExecStart=/usr/bin/chromium --headless=new --disable-gpu --screenshot=/tmp/Laniakea.png --virtual-time-budget=30000 --timeout=60000 --window-size=1920,1080 file:///home/visnudeva/.config/systemd/user/headless-index.html
+
+# Set it as wallpaper
+ExecStartPost=/usr/bin/swww img /tmp/Laniakea.png
+
+[Install]
+WantedBy=graphical-session.target
