@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Laniakea Still</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
+</head>
+<body>
+
+<script>
+  // Global variables
+  let points = [];
+  let mult = 0.005;
+
+  let r1, r2, g1, g2, b1, b2;
+
+  // Limit for how many frames to draw before saving
+  let frameCountLimit = 500;
+
+  function setup() {
+    createCanvas(windowWidth, windowHeight);
+    background(20);
+    angleMode(DEGREES);
+    noiseDetail(1);
+
+    points = [];
+    let density = 50;
+    let space = height / density;
+
+    for (let x = 0; x < width; x += space / 2) {
+      for (let y = 0; y < height; y += space * 2) {
+        let p = createVector(x + random(-100, 100), y + random(-100, 100));
+        points.push(p);
+      }
+    }
+
+    r1 = random(255);
+    r2 = random(255);
+    g1 = random(255);
+    g2 = random(255);
+    b1 = random(255);
+    b2 = random(255);
+
+    mult = random(0.002, 0.01);
+  }
+
+  function draw() {
+    noStroke();
+    for (let i = 0; i < points.length; i++) {
+      let r = map(points[i].x, 0, width, r1, r2);
+      let g = map(points[i].x, 0, height, g1, g2);
+      let b = map(points[i].x, 0, width, b1, b2);
+
+      let alpha = map(dist(width / 2, height / 2, points[i].x, points[i].y), 0, height / 2, 255, 0);
+      fill(r, g, b, alpha);
+
+      let angle = map(noise(points[i].x * mult, points[i].y * mult), 0, 1, 0, 720);
+      points[i].add(createVector(cos(angle), sin(angle)));
+
+      const centralAreaDivisor = window.innerWidth > 768 ? 3 : 4.5;
+      if (dist(width / 2, height / 2, points[i].x, points[i].y) < height / centralAreaDivisor) {
+        ellipse(points[i].x, points[i].y, 0.5);
+      }
+    }
+
+    // After enough frames, save and stop
+    if (frameCount > frameCountLimit) {
+      saveCanvas("Laniakea", "png");
+      noLoop();
+      // Exit after a short delay so the PNG is written properly
+      setTimeout(() => {
+        window.close();
+      }, 500);
+    }
+  }
+
+  function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+  }
+</script>
+
+</body>
+</html>
