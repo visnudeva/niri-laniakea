@@ -189,13 +189,13 @@ layout {
         // off
 
         width 1
-        active-color "#DDDDDD"
+        // active-color "#DDDDDD"
         inactive-color "#141414"
 
         // Color of the border around windows that request your attention.
         urgent-color "#9b0000"
 
-        // active-gradient from="#ffbb66" to="#ffc880" angle=45 relative-to="workspace-view"
+        active-gradient from="#cca9e8" to="#141414" angle=180 relative-to="workspace-view"
         // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
     }
 
@@ -324,11 +324,13 @@ switch-events {
 // The wiki explains how to configure individual animations:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Animations
 animations {
+	
     // Uncomment to turn off all animations.
     // off
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
     // slowdown 3.0
+    
 }
 
 
@@ -358,6 +360,7 @@ window-rule {
     match app-id="firefox"
     match app-id="gimp"
     open-maximized true
+    draw-border-with-background false
 }
 window-rule {
     match app-id="mpv"
@@ -439,8 +442,8 @@ binds {
 	Mod+S hotkey-overlay-title="Open Stremio" { spawn "stremio"; }
 	Mod+D hotkey-overlay-title="Open Qbittorrent" { spawn "qbittorrent"; }
 	
-	Mod+L hotkey-overlay-title="Reload Wallpaper Service" { spawn "bash" "-c" "systemctl --user daemon-reload && systemctl --user restart wallpaper.service"; }
-
+	// Mod+L hotkey-overlay-title="Reload Wallpaper Service" { spawn "bash" "-c" "systemctl --user daemon-reload && systemctl --user restart wallpaper.service"; }
+	Mod+L hotkey-overlay-title="Reload Wallpaper Service" { spawn "bash" "-c" "systemctl --user start wallpaper.service"; }
 
     // Note: the entire command goes as a single argument in the end.
     // Mod+T { spawn "bash" "-c" "notify-send hello && exec alacritty"; }
