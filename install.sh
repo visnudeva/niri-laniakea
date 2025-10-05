@@ -47,18 +47,15 @@ UNINSTALL=0
 SUDO=""
 
 PACKAGES=(
-    niri kitty waybar mako swaybg swayidle swaylock-effects
-    thunar thunar-volman thunar-archive-plugin thunar-media-tags-plugin
-    geany sddm acpi libnotify 
-    networkmanager network-manager-applet nm-connection-editor
-    blueman bluez bluez-utils nwg-look polkit-gnome
-    kvantum kvantum-qt5 qt6-wayland
-    qt5-graphicaleffects qt6-5compat
-    brightnessctl wl-clipboard gvfs popsicle
-    xdg-desktop-portal-hyprland yay satty udiskie
-    pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse
-    wireplumber pamixer pavucontrol
-    tela-circle-icon-theme-dracula capitaine-cursors
+    acpi blueman bluez bluez-utils brightnessctl capitaine-cursors 
+    fish geany gvfs kitty kvantum kvantum-qt5 libnotify mako 
+    network-manager-applet networkmanager nm-connection-editor 
+    niri nwg-look pamixer pavucontrol pipewire pipewire-alsa 
+    pipewire-audio pipewire-jack pipewire-pulse polkit-gnome 
+    qt5-graphicaleffects qt6-5compat qt6-wayland satty sddm 
+    swww swayidle swaylock thunar thunar-archive-plugin 
+    thunar-media-tags-plugin thunar-volman udiskie waybar 
+    wl-clipboard wireplumber xdg-desktop-portal-hyprland yay
 )
 AUR_PACKAGES=(
     ttf-nerd-fonts-symbols
