@@ -1,7 +1,6 @@
 
 * {
     border: none;
-    border-radius: 25px;
     font-family: JetBrainsMono Nerd Font, monospace;
     font-weight: bold;
     font-size: 14px;
@@ -16,7 +15,7 @@ window#waybar {
 
 #window{
 	background: #141414;
-	color: #DDDDDD;  
+	color: #cca9e8;  
 	border-radius: 10px;
     padding: 0px 10px;
     margin: 5px 0px;
@@ -36,37 +35,37 @@ window#waybar {
 }
 
 #clock {
-    color: #DDDDDD;
+    color: #cca9e8;
     border-radius: 10px 10px 10px 10px;/* optional rounded edges */
     margin-left: 10px;
     margin-right: 10px;/* space outside */
 }
 
 #idle_inhibitor {
-	color: #DDDDDD;
+	color: #cca9e8;
 	padding: 0px 5px;/* space inside the border */
     border-radius: 10px;
 }
 
 #battery {
-    color: #DDDDDD;
+    color: #cca9e8;
     border-radius: 10px 0px 0px 10px;
     margin-left: 20px;
 }
 
 #backlight {
-    color: #DDDDDD;
+    color: #cca9e8;
     border-radius: 0px 0px 0px 0px;
 }
 
 #pulseaudio {
-	color: #DDDDDD;
+	color: #cca9e8;
     border-radius: 0px 10px 10px 0px;
 }
 
 #tray {
-	color: #DDDDDD;
-	border: 1px solid #DDDDDD;
+	color: #cca9e8;
+	border: 1px solid #cca9e8;
 	padding: 4px 12px;
     border-radius: 10px;
     margin-left: 10px;
