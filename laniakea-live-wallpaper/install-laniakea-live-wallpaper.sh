@@ -190,7 +190,7 @@ ExecStartPre=/bin/sleep 1
 ExecStart=%h/Pictures/Wallpapers/laniakea_env/bin/python %h/Pictures/Wallpapers/playwright_capture_wallpaper.py /tmp/Laniakea.png
 
 # Set it as wallpaper
-ExecStartPost=/usr/bin/swww img /tmp/Laniakea.png
+ExecStartPost=/usr/bin/swww img /tmp/Laniakea.png --transition-fps 60 --transition-duration 1 --transition-type grow
 
 [Install]
 WantedBy=graphical-session.target
