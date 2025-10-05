@@ -9,10 +9,10 @@ font="JetBrainsMono Nerd"
 indicator
 indicator-radius=200
 indicator-thickness=20
-line-color=DDDDDD
+line-color=cca9e8
 ring-color=141414
-inside-color=DDDDDD
-key-hl-color=DDDDDD
+inside-color=cca9e8
+key-hl-color=cca9e8
 separator-color=00000000
 text-color=141414
 text-caps-lock-color=""
@@ -28,7 +28,7 @@ text-clear-color=ffffff
 ring-clear-color=ffffff
 line-clear-color=141414
 line-wrong-color=141414
-bs-hl-color=DDDDDD
+bs-hl-color=cca9e8
 grace=3
 grace-no-mouse
 grace-no-touch
