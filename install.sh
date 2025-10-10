@@ -443,7 +443,7 @@ dryrun_summary() {
 }
 
 uninstall() {
-    log_info "[+] Uninstalling Niri70S setup..."
+    log_info "[+] Uninstalling niri-laniakea setup..."
     if (( DRYRUN )); then
         DRYRUN_SUMMARY+=("Would uninstall niri-laniakea-theme, restore backup, remove all installed packages and dotfiles")
     else
