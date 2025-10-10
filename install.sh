@@ -310,11 +310,18 @@ setup_theming() {
         # Apply Kvantum theme
         local kvantum_config="$HOME/.config/Kvantum/kvantum.kvconfig"
         local kvantum_theme="Laniakea-Cybersakura-Kvantum"
+        
+        # Create Kvantum config directory if it doesn't exist
+        mkdir -p "$HOME/.config/Kvantum"
+        
         if [[ -f "$kvantum_config" ]]; then
             sed -i "s/^theme=.*/theme=$kvantum_theme/" "$kvantum_config"
-            log_success "[+] Applied Kvantum theme '$kvantum_theme'."
+            log_success "[+] Applied Kvantum theme '$kvantum_theme' to existing config."
         else
-            log_error "[!] Kvantum config file not found at '$kvantum_config'. Skipping Kvantum theme setup."
+            # Create the config file with the theme setting
+            echo "[General]" > "$kvantum_config"
+            echo "theme=$kvantum_theme" >> "$kvantum_config"
+            log_success "[+] Created Kvantum config with theme '$kvantum_theme'."
         fi
     fi
 }
@@ -351,11 +358,20 @@ install_laniakea_live_wallpaper() {
     log_info "[+] Installing Laniakea Live Wallpaper..."
     if (( DRYRUN )); then
         DRYRUN_SUMMARY+=("Would run: bash \"$CLONE_DIR/laniakea-live-wallpaper/install-laniakea-live-wallpaper.sh\"")
+        DRYRUN_SUMMARY+=("Would run: systemctl --user daemon-reload")
+        DRYRUN_SUMMARY+=("Would run: systemctl --user enable wallpaper.timer")
+        DRYRUN_SUMMARY+=("Would run: systemctl --user start wallpaper.timer")
     else
         # Execute the live wallpaper installation script
         if [[ -f "$CLONE_DIR/laniakea-live-wallpaper/install-laniakea-live-wallpaper.sh" ]]; then
             bash "$CLONE_DIR/laniakea-live-wallpaper/install-laniakea-live-wallpaper.sh"
             log_success "[+] Laniakea Live Wallpaper installed."
+            
+            # Reload and enable the wallpaper services
+            systemctl --user daemon-reload
+            systemctl --user enable wallpaper.timer
+            systemctl --user start wallpaper.timer
+            log_success "[+] Laniakea Live Wallpaper services enabled and started."
         else
             log_error "[!] Laniakea Live Wallpaper installation script not found. Skipping."
         fi
