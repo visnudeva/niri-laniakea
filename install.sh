@@ -28,7 +28,7 @@ log_info() {
 # --- Variables ---
 REPO_URL="https://github.com/visnudeva/niri-laniakea"
 CLONE_DIR="${HOME}/niri-laniakea"
-CONFIG_SOURCE="${CLONE_DIR}/.config"
+CONFIG_SOURCE="${CLONE_DIR}/config"
 CONFIG_TARGET="${HOME}/.config"
 WALLPAPER_NAME="Laniakea.png"
 WALLPAPER_SOURCE="${CLONE_DIR}/backgrounds/${WALLPAPER_NAME}"
@@ -257,16 +257,24 @@ install_aur_packages() {
 
 merge_or_diff_dotfiles() {
     if [[ -d "$CONFIG_TARGET" ]]; then
-        log_info "[+] Existing config found. Would you like to merge/diff configs before overwrite?"
+        log_info "[+] Existing config found. You can review and merge differences before overwrite."
         if (( DRYRUN )); then
             DRYRUN_SUMMARY+=("Would compare and optionally merge $CONFIG_SOURCE with $CONFIG_TARGET")
         else
-            read -p "[?] Merge/diff configs with meld? [y/N]: " REPLY
-            if [[ $REPLY =~ ^[Yy]$ ]]; then
-                meld "$CONFIG_TARGET" "$CONFIG_SOURCE"
-                log_info "[+] Review complete. Proceeding with overwrite."
+            read -p "[?] Open config comparison with meld? [Y/n] (Press Enter for Yes, 'n' to skip): " REPLY
+            if [[ -z "$REPLY" || $REPLY =~ ^[Yy]$ ]]; then
+                if command -v meld &>/dev/null; then
+                    meld "$CONFIG_TARGET" "$CONFIG_SOURCE"
+                    log_info "[+] Review complete. Proceeding with overwrite."
+                else
+                    log_info "[+] meld not found, skipping comparison."
+                fi
+            else
+                log_info "[+] Skipping config comparison."
             fi
         fi
+    else
+        log_info "[+] No existing config found. Proceeding with installation."
     fi
 }
 
