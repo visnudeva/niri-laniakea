@@ -332,10 +332,17 @@ install_gtk_kvantum_themes() {
         DRYRUN_SUMMARY+=("Would run: cp -r \"$CLONE_DIR/GTK-kvantum/\"* \"\$HOME/.themes/\"")
     else
         # Create themes directory
-        mkdir -p "$HOME/.themes"
-        
-        # Copy all GTK-Kvantum themes to ~/.themes
-        cp -r "$CLONE_DIR/GTK-kvantum/"* "$HOME/.themes/"
+        # Find and copy all theme subdirectories (like Laniakea-XXX-Gtk and Laniakea-XXX-Kvantum) to ~/.themes
+        for theme_dir in "$CLONE_DIR/GTK-kvantum"/*/; do
+            if [[ -d "$theme_dir" ]]; then
+                # Copy each subtheme directory (like Laniakea-XXX-Gtk and Laniakea-XXX-Kvantum)
+                for subtheme in "$theme_dir"*/; do
+                    if [[ -d "$subtheme" ]]; then
+                        cp -r "$subtheme" "$HOME/.themes/"
+                    fi
+                done
+            fi
+        done
         log_success "[+] GTK-Kvantum themes installed to ~/.themes"
     fi
 }
@@ -427,8 +434,14 @@ post_install_checks() {
         pacman -Q "$pkg" &>/dev/null && log_success "Package $pkg installed." || log_error "Package $pkg NOT installed!"
     done
     [[ -d "$CONFIG_TARGET" ]] && log_success "$CONFIG_TARGET exists." || log_error "$CONFIG_TARGET missing!"
-    [[ -f "$WALLPAPER_DEST" ]] && log_success "Wallpaper at $WALLPAPER_DEST." || log_error "Wallpaper missing!"
-    [[ -d "$HOME/.themes/Laniakea-Cybersakura-Gtk" ]] && log_success "GTK-Kvantum themes installed." || log_error "GTK-Kvantum themes missing!"
+    # Static wallpaper is no longer used; live wallpaper is used instead, checked separately below
+    log_info "Static wallpaper check skipped (using live wallpaper instead)."
+    # Check for any of the expected Laniakea GTK themes
+    if [[ -d "$HOME/.themes/Laniakea-Cybersakura-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Bluemoon-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Dreamvapor-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Duskrose-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Shadowfern-Gtk" ]]; then
+        log_success "GTK-Kvantum themes installed."
+    else
+        log_error "GTK-Kvantum themes missing!"
+    fi
     [[ -f "$HOME/Pictures/Wallpapers/index.html" ]] && log_success "Laniakea Live Wallpaper installed." || log_error "Laniakea Live Wallpaper missing!"
 }
 
