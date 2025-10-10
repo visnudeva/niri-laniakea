@@ -5,6 +5,9 @@
 
 set -e  # Exit on any error
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 echo "=== Laniakea Live Wallpaper Installation Script (Playwright Version) ==="
 echo "This script will install and configure the Laniakea live wallpaper on Arch Linux using Playwright for faster execution with exact visuals"
 echo
@@ -144,12 +147,23 @@ INDEX_HTML_EOF
 
 # Copy the Playwright-based wallpaper generation scripts (faster than original but exact same visuals)
 echo "Installing Playwright-based wallpaper generation scripts..."
-cp /home/visnudeva/Desktop/qwen/laniakea-live-wallpaper/playwright_capture_wallpaper.py ~/Pictures/Wallpapers/
-chmod +x ~/Pictures/Wallpapers/playwright_capture_wallpaper.py
 
-# Make the Python scripts executable
-chmod +x ~/Pictures/Wallpapers/fast_capture_wallpaper.py
-chmod +x ~/Pictures/Wallpapers/fast_generate_wallpaper.py
+# Check if the Python files exist in the script directory before copying
+if [[ -f "$SCRIPT_DIR/playwright_capture_wallpaper.py" ]]; then
+    cp "$SCRIPT_DIR/playwright_capture_wallpaper.py" ~/Pictures/Wallpapers/
+    chmod +x ~/Pictures/Wallpapers/playwright_capture_wallpaper.py
+else
+    echo "Warning: playwright_capture_wallpaper.py not found in $SCRIPT_DIR. This may be downloaded later or created by the installation process."
+fi
+
+# Make the Python scripts executable if they exist
+WALLPAPERS_DIR="$HOME/Pictures/Wallpapers"
+if [[ -f "$WALLPAPERS_DIR/fast_capture_wallpaper.py" ]]; then
+    chmod +x "$WALLPAPERS_DIR/fast_capture_wallpaper.py"
+fi
+if [[ -f "$WALLPAPERS_DIR/fast_generate_wallpaper.py" ]]; then
+    chmod +x "$WALLPAPERS_DIR/fast_generate_wallpaper.py"
+fi
 
 # Install required Python packages using a virtual environment to comply with PEP 668
 python -m venv ~/Pictures/Wallpapers/laniakea_env
@@ -187,10 +201,12 @@ Type=oneshot
 ExecStartPre=/bin/sleep 1
 
 # Generate a new wallpaper PNG with the Playwright script (faster than original Firefox but same visuals)
+# Check if the Python script exists before running
+ExecCondition=/bin/sh -c 'test -f "$HOME/Pictures/Wallpapers/playwright_capture_wallpaper.py"'
 ExecStart=%h/Pictures/Wallpapers/laniakea_env/bin/python %h/Pictures/Wallpapers/playwright_capture_wallpaper.py /tmp/Laniakea.png
 
 # Set it as wallpaper
-ExecStartPost=/usr/bin/swww img /tmp/Laniakea.png --transition-fps 60 --transition-duration 1 --transition-type grow
+ExecStartPost=/bin/swww img /tmp/Laniakea.png --transition-fps 60 --transition-duration 1 --transition-type grow
 
 [Install]
 WantedBy=graphical-session.target
