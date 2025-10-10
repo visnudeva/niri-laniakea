@@ -35,7 +35,7 @@ WALLPAPER_SOURCE="${CLONE_DIR}/backgrounds/${WALLPAPER_NAME}"
 WALLPAPER_DEST="${HOME}/.config/backgrounds/${WALLPAPER_NAME}"
 BACKUP_DIR="${HOME}/.config_backup_$(date +%Y%m%d_%H%M%S)"
 # SDDM theme and config paths
-SDDM_THEME_SOURCE="${CLONE_DIR}/sddm/Laniakea"
+SDDM_THEME_SOURCE="${CLONE_DIR}/sddm/laniakea"
 SDDM_THEME_DEST="/usr/share/sddm/themes/Laniakea"
 SDDM_CONF_SOURCE="${CLONE_DIR}/sddm/sddm.conf"
 SDDM_CONF_DEST="/etc/sddm.conf"
