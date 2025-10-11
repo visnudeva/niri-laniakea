@@ -52,8 +52,7 @@ PACKAGES=(
     network-manager-applet networkmanager nm-connection-editor 
     niri nwg-look pamixer pavucontrol pipewire pipewire-alsa 
     pipewire-audio pipewire-jack pipewire-pulse polkit-gnome 
-    qt5-graphicaleffects qt6-5compat qt6-wayland satty sddm 
-    swww swayidle swaylock thunar thunar-archive-plugin 
+    qt5-graphicaleffects qt6-5compat qt6-wayland satty swww swayidle swaylock thunar thunar-archive-plugin 
     thunar-media-tags-plugin thunar-volman udiskie waybar 
     wl-clipboard wireplumber xdg-desktop-portal-hyprland yay
 )
@@ -297,17 +296,55 @@ setup_theming() {
         DRYRUN_SUMMARY+=("Would apply Laniakea-Cybersakura theme in Kvantum")
     else
         # Set GTK theme using nwg-look
-        gsettings set org.gnome.desktop.interface gtk-theme "Laniakea-Cybersakura"
-        gsettings set org.gnome.desktop.interface icon-theme "Tela-circle-dracula"
-        log_success "[+] Applied GTK theme and icon theme via nwg-look."
+        if command -v gsettings &>/dev/null; then
+            gsettings set org.gnome.desktop.interface gtk-theme "Laniakea-Cybersakura"
+            gsettings set org.gnome.desktop.interface icon-theme "Tela-circle-dracula"
+            log_success "[+] Applied GTK theme and icon theme via gsettings."
+        else
+            log_error "[!] gsettings command not found, skipping GTK theme application."
+        fi
 
         # Set Qt theme via qt6ct
         mkdir -p "$HOME/.config/qt6ct"
-        echo -e "[Qt]\nstyle=kvantum" > "$HOME/.config/qt6ct/qt6ct.conf"
-        echo -e "[Icons]\ntheme=Tela-circle-dracula" >> "$HOME/.config/qt6ct/qt6ct.conf"
+        cat > "$HOME/.config/qt6ct/qt6ct.conf" << 'QT6CT_EOF'
+[Appearance]
+color_scheme_path=/home/visnudeva/.config/qt6ct/colors/Catppuccin-Mocha.conf
+custom_palette=true
+standard_dialogs=default
+style=kvantum
+
+[Fonts]
+fixed="Sans Serif,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1"
+general="Sans Serif,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1"
+
+[Interface]
+activate_item_on_single_click=1
+buttonbox_layout=0
+cursor_flash_time=1000
+dialog_buttons_have_icons=1
+double_click_interval=400
+gui_effects=@Invalid()
+keyboard_scheme=2
+menus_have_icons=true
+show_shortcuts_in_context_menus=true
+stylesheets=@Invalid()
+toolbutton_style=4
+underline_shortcut=1
+wheel_scroll_lines=3
+
+[SettingsWindow]
+geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x3\0\0\0\0\x5\0\0\0\0\0\0\0\b\xb3\0\0\x4\x6\0\0\x5\0\0\0\0\0\0\0\b\xb3\0\0\x4\x6\0\0\0\0\0\0\0\0\a\x80\0\0\x5\0\0\0\0\0\0\0\b\xb3\0\0\x4\x6)
+
+[Troubleshooting]
+force_raster_widgets=1
+ignored_applications=@Invalid()
+
+[Qt]
+style=kvantum
+QT6CT_EOF
         log_success "[+] Applied Qt theme and icons via qt6ct."
 
-        # Apply Kvantum theme
+        # Apply Kvantum theme with verification
         local kvantum_config="$HOME/.config/Kvantum/kvantum.kvconfig"
         local kvantum_theme="Laniakea-Cybersakura-Kvantum"
         
@@ -322,6 +359,19 @@ setup_theming() {
             echo "[General]" > "$kvantum_config"
             echo "theme=$kvantum_theme" >> "$kvantum_config"
             log_success "[+] Created Kvantum config with theme '$kvantum_theme'."
+        fi
+        
+        # Apply the theme using kvantummanager to ensure it's properly activated
+        if command -v kvantummanager &>/dev/null; then
+            # Wait a bit for the config to be written
+            sleep 1
+            if kvantummanager --set "$kvantum_theme" 2>/dev/null; then
+                log_success "[+] Kvantum theme '$kvantum_theme' successfully applied via kvantummanager."
+            else
+                log_error "[!] Failed to apply Kvantum theme via kvantummanager."
+            fi
+        else
+            log_error "[!] kvantummanager not found, but theme config was set."
         fi
     fi
 }
@@ -338,19 +388,34 @@ install_gtk_kvantum_themes() {
         DRYRUN_SUMMARY+=("Would install GTK-Kvantum themes to ~/.themes and ~/.config/Kvantum")
         DRYRUN_SUMMARY+=("Would run: cp -r \"$CLONE_DIR/GTK-kvantum/\"* \"\$HOME/.themes/\"")
     else
-        # Create themes directory
+        # Create themes directories
+        mkdir -p "$HOME/.themes"
+        mkdir -p "$HOME/.icons"  # Create icons directory for icon themes
+        
         # Find and copy all theme subdirectories (like Laniakea-XXX-Gtk and Laniakea-XXX-Kvantum) to ~/.themes
         for theme_dir in "$CLONE_DIR/GTK-kvantum"/*/; do
             if [[ -d "$theme_dir" ]]; then
                 # Copy each subtheme directory (like Laniakea-XXX-Gtk and Laniakea-XXX-Kvantum)
                 for subtheme in "$theme_dir"*/; do
                     if [[ -d "$subtheme" ]]; then
-                        cp -r "$subtheme" "$HOME/.themes/"
+                        theme_name=$(basename "$subtheme")
+                        if [[ "$theme_name" == *"-Gtk"* ]]; then
+                            # Copy GTK theme to ~/.themes
+                            cp -r "$subtheme" "$HOME/.themes/"
+                            log_info "[+] Installed GTK theme: $theme_name"
+                        elif [[ "$theme_name" == *"-Kvantum"* ]]; then
+                            # Copy Kvantum theme to ~/.config/Kvantum
+                            cp -r "$subtheme" "$HOME/.config/Kvantum/"
+                            log_info "[+] Installed Kvantum theme: $theme_name"
+                        fi
                     fi
                 done
             fi
         done
-        log_success "[+] GTK-Kvantum themes installed to ~/.themes"
+        log_success "[+] GTK-Kvantum themes installed to ~/.themes and ~/.config/Kvantum"
+        
+        # Also copy any icon themes if they exist in the theme directories
+        find "$CLONE_DIR/GTK-kvantum" -name "*icon*" -type d -exec cp -r {} "$HOME/.icons/" \; 2>/dev/null || true
     fi
 }
 
@@ -367,11 +432,38 @@ install_laniakea_live_wallpaper() {
             bash "$CLONE_DIR/laniakea-live-wallpaper/install-laniakea-live-wallpaper.sh"
             log_success "[+] Laniakea Live Wallpaper installed."
             
-            # Reload and enable the wallpaper services
+            # Wait a bit for the installation to complete before starting services
+            sleep 2
+            
+            # Reload and enable the wallpaper services with longer timeout
             systemctl --user daemon-reload
+            systemctl --user enable swww-daemon.service
             systemctl --user enable wallpaper.timer
-            systemctl --user start wallpaper.timer
-            log_success "[+] Laniakea Live Wallpaper services enabled and started."
+            
+            # Start swww daemon first and wait for it to be ready
+            systemctl --user start swww-daemon.service
+            
+            # Wait for swww daemon to be fully running
+            local max_wait=10
+            local count=0
+            while [ $count -lt $max_wait ]; do
+                if pgrep -f "swww-daemon" > /dev/null; then
+                    log_info "[+] swww daemon is running."
+                    break
+                else
+                    log_info "[+] Waiting for swww daemon... ($count/$max_wait)"
+                    sleep 1
+                    ((count++))
+                fi
+            done
+            
+            if [ $count -eq $max_wait ]; then
+                log_error "[!] swww daemon did not start properly."
+            else
+                # Start the wallpaper timer
+                systemctl --user start wallpaper.timer
+                log_success "[+] Laniakea Live Wallpaper services enabled and started."
+            fi
         else
             log_error "[!] Laniakea Live Wallpaper installation script not found. Skipping."
         fi
@@ -426,6 +518,8 @@ reload_user_services() {
         DRYRUN_SUMMARY+=("Would run: systemctl --user daemon-reload")
     else
         systemctl --user daemon-reload
+        # Wait a bit for the reload to complete
+        sleep 1
     fi
 }
 
@@ -452,13 +546,40 @@ post_install_checks() {
     [[ -d "$CONFIG_TARGET" ]] && log_success "$CONFIG_TARGET exists." || log_error "$CONFIG_TARGET missing!"
     # Static wallpaper is no longer used; live wallpaper is used instead, checked separately below
     log_info "Static wallpaper check skipped (using live wallpaper instead)."
+    
     # Check for any of the expected Laniakea GTK themes
     if [[ -d "$HOME/.themes/Laniakea-Cybersakura-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Bluemoon-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Dreamvapor-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Duskrose-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Shadowfern-Gtk" ]]; then
         log_success "GTK-Kvantum themes installed."
     else
         log_error "GTK-Kvantum themes missing!"
     fi
+    
+    # Check for Kvantum themes
+    if [[ -d "$HOME/.config/Kvantum/Laniakea-Cybersakura-Kvantum" ]] || [[ -d "$HOME/.config/Kvantum/Laniakea-Bluemoon-Kvantum" ]] || [[ -d "$HOME/.config/Kvantum/Laniakea-Dreamvapor-Kvantum" ]] || [[ -d "$HOME/.config/Kvantum/Laniakea-Duskrose-Kvantum" ]] || [[ -d "$HOME/.config/Kvantum/Laniakea-Shadowfern-Kvantum" ]]; then
+        log_success "Kvantum themes installed."
+    else
+        log_error "Kvantum themes missing!"
+    fi
+    
     [[ -f "$HOME/Pictures/Wallpapers/index.html" ]] && log_success "Laniakea Live Wallpaper installed." || log_error "Laniakea Live Wallpaper missing!"
+    
+    # Check if icon theme is set correctly
+    local current_icon_theme
+    current_icon_theme=$(gsettings get org.gnome.desktop.interface icon-theme 2>/dev/null || echo "(command not available)")
+    if [[ "$current_icon_theme" == *Tela-circle* ]]; then
+        log_success "Icon theme properly set to: $current_icon_theme"
+    else
+        log_error "Icon theme not set correctly. Current: $current_icon_theme"
+    fi
+    
+    # Check if GTK theme is set correctly
+    local current_gtk_theme
+    current_gtk_theme=$(gsettings get org.gnome.desktop.interface gtk-theme 2>/dev/null || echo "(command not available)")
+    if [[ "$current_gtk_theme" == *Laniakea* ]]; then
+        log_success "GTK theme properly set to: $current_gtk_theme"
+    else
+        log_error "GTK theme not set correctly. Current: $current_gtk_theme"
+    fi
 }
 
 dryrun_summary() {
@@ -486,15 +607,17 @@ uninstall() {
             log_success "[+] Restored original config from $latest_backup"
         fi
         # Remove packages
-        $SUDO pacman -Rs --noconfirm "${PACKAGES[@]}"
+        $SUDO pacman -Rs --noconfirm "${PACKAGES[@]}" 2>/dev/null || log_info "Some packages may not have been installed to begin with."
         # Remove AUR packages
         for aur_pkg in "${AUR_PACKAGES[@]}"; do
-            $SUDO pacman -Rs --noconfirm "$aur_pkg"
+            $SUDO pacman -Rs --noconfirm "$aur_pkg" 2>/dev/null || log_info "AUR package $aur_pkg may not have been installed to begin with."
         done
         # Remove wallpaper
         rm -f "$WALLPAPER_DEST"
         # Remove GTK-Kvantum themes
-        rm -rf "$HOME/.themes/Laniakea-Cybersakura"*
+        rm -rf "$HOME/.themes/Laniakea-*"
+        # Remove Kvantum themes
+        rm -rf "$HOME/.config/Kvantum/Laniakea-*"
         # Remove Laniakea Live Wallpaper files
         rm -rf "$HOME/Pictures/Wallpapers"
         rm -f "$HOME/.config/systemd/user/swww-daemon.service"
@@ -566,15 +689,15 @@ main() {
     backup_config
     merge_or_diff_dotfiles
     copy_dotfiles
+    install_gtk_kvantum_themes  # Install themes before applying them
     setup_theming
     setup_wallpaper
-    install_gtk_kvantum_themes
     install_laniakea_live_wallpaper
     setup_sddm
     post_install_checks
     dryrun_summary
 
-    log_success "\nAll done! niri-laniakea setup is complete, you now have a fresh Niri installation with its dotfiles and a beautiful wallpaper. Enjoy your new sleek system!\n"
+    log_success "\nAll done! niri-laniakea setup is complete, you now have a fresh Niri installation with its dotfiles and a beautiful wallpaper, to ensure everything is applied successfully please reboot or logout and log back in and enjoy your new sleek system!\n"
 }
 
 main
