@@ -550,37 +550,21 @@ install_laniakea_live_wallpaper() {
     if (( DRYRUN )); then
         DRYRUN_SUMMARY+=("Would run: bash \"$CLONE_DIR/laniakea-live-wallpaper/install-laniakea-live-wallpaper.sh\"")
         DRYRUN_SUMMARY+=("Would run: systemctl --user daemon-reload")
-        DRYRUN_SUMMARY+=("Would run: systemctl --user enable wallpaper.timer")
-        DRYRUN_SUMMARY+=("Would run: systemctl --user start wallpaper.timer")
+        DRYRUN_SUMMARY+=("Would run: systemctl --user enable wallpaper.service")
+        DRYRUN_SUMMARY+=("Would run: systemctl --user start wallpaper.service")
     else
         # Execute the live wallpaper installation script
         if [[ -f "$CLONE_DIR/laniakea-live-wallpaper/install-laniakea-live-wallpaper.sh" ]]; then
             bash "$CLONE_DIR/laniakea-live-wallpaper/install-laniakea-live-wallpaper.sh"
             log_success "[+] Laniakea Live Wallpaper installed."
             
-            # Create wallpaper.timer to periodically update the wallpaper
-            mkdir -p "$HOME/.config/systemd/user"
-            cat > "$HOME/.config/systemd/user/wallpaper.timer" << 'TIMER_EOF'
-[Unit]
-Description=Timer for Laniakea Live Wallpaper
-Requires=wallpaper.service
-
-[Timer]
-# Run every 30 minutes to update the wallpaper
-OnBootSec=1min
-OnUnitActiveSec=30min
-
-[Install]
-WantedBy=timers.target
-TIMER_EOF
-            
             # Wait a bit for the installation to complete before starting services
             sleep 2
             
-            # Reload and enable the wallpaper services with longer timeout
+            # Reload and enable the wallpaper service (no timer - just sets wallpaper once)
             systemctl --user daemon-reload
             systemctl --user enable swww-daemon.service
-            systemctl --user enable wallpaper.timer
+            systemctl --user enable wallpaper.service  # Enable the service to run on session start
             
             # Start swww daemon first and wait for it to be ready
             systemctl --user start swww-daemon.service
@@ -602,9 +586,9 @@ TIMER_EOF
             if [ $count -eq $max_wait ]; then
                 log_error "[!] swww daemon did not start properly."
             else
-                # Start the wallpaper timer
-                systemctl --user start wallpaper.timer
-                log_success "[+] Laniakea Live Wallpaper services enabled and started."
+                # Start the wallpaper service once to set the wallpaper
+                systemctl --user start wallpaper.service
+                log_success "[+] Laniakea Live Wallpaper services enabled and started (no automatic updates)."
             fi
         else
             log_error "[!] Laniakea Live Wallpaper installation script not found. Skipping."
@@ -776,7 +760,6 @@ uninstall() {
         rm -rf "$HOME/Pictures/Wallpapers"
         rm -f "$HOME/.config/systemd/user/swww-daemon.service"
         rm -f "$HOME/.config/systemd/user/wallpaper.service"
-        rm -f "$HOME/.config/systemd/user/wallpaper.timer"
         log_success "[+] Uninstall complete."
     fi
     dryrun_summary
