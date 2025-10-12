@@ -1,5 +1,3 @@
-**DEBUGING**
-
 **A clean, minimalist Niri dotfiles setup for Arch-based Linux distributions.
 This setup includes an install script for Niri, Fuzzel, Mako, Waybar, Kitty, and Swaylock, along with my Laniakea wallpaper generator, which creates a unique wallpaper at every boot or whenever reloaded with Mod+L4. It also comes with four Laniakea GTK and Kvantum themes, with Cybersakura set as the default.**
 
@@ -12,13 +10,13 @@ chmod +x install.sh
 
 Main keybindings:
      
-    - Mod+T kitty (terminal)
-    - Mod+I geany (IDE)
     - Mod+SPACE fuzzel (app launcher)
+    - Mod+E fuzzel (logout menu)
     - Mod+B firefox (web browser)
     - Mod+F thunar (file manager)
     - Mod+L generate new Laniakea wallpaper
-    - Mod+E fuzzel (logout menu)
+    - Mod+T kitty (terminal)
+    - Mod+I geany (IDE)
     - Mod+W waybar (show/hide)
     - Mod+M maximise/minimise window (100%/50% width)
 
