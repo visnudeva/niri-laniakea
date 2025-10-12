@@ -58,11 +58,11 @@ else
 fi
 GENERATOR_EOF
 
-chmod +x ~/Pictures/Wallpapers/robust_wallpaper_generator.sh
+chmod +x ~/Pictures/Wallpapers/wallpaper_generator.sh
 
 echo "Updated wallpaper.service"
 
-# Update the wallpaper service to use the robust script
+# Update the wallpaper service to use the script
 cat > ~/.config/systemd/user/wallpaper.service << 'SERVICE_EOF'
 [Unit]
 Description=Generate random wallpaper with Playwright (faster execution, same visuals) and set via swww
@@ -72,8 +72,8 @@ After=graphical-session.target swww-daemon.service
 Type=oneshot
 ExecStartPre=/bin/sleep 5
 
-# Use the robust wallpaper generator script
-ExecStart=%h/Pictures/Wallpapers/robust_wallpaper_generator.sh
+# Use the wallpaper generator script
+ExecStart=%h/Pictures/Wallpapers/wallpaper_generator.sh
 
 [Install]
 WantedBy=graphical-session.target
