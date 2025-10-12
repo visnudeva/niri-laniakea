@@ -256,22 +256,7 @@ install_aur_packages() {
 
 merge_or_diff_dotfiles() {
     if [[ -d "$CONFIG_TARGET" ]]; then
-        log_info "[+] Existing config found. You can review and merge differences before overwrite."
-        if (( DRYRUN )); then
-            DRYRUN_SUMMARY+=("Would compare and optionally merge $CONFIG_SOURCE with $CONFIG_TARGET")
-        else
-            read -p "[?] Open config comparison with meld? [Y/n] (Press Enter for Yes, 'n' to skip): " REPLY
-            if [[ -z "$REPLY" || $REPLY =~ ^[Yy]$ ]]; then
-                if command -v meld &>/dev/null; then
-                    meld "$CONFIG_TARGET" "$CONFIG_SOURCE"
-                    log_info "[+] Review complete. Proceeding with overwrite."
-                else
-                    log_info "[+] meld not found, skipping comparison."
-                fi
-            else
-                log_info "[+] Skipping config comparison."
-            fi
-        fi
+        log_info "[+] Existing config directory found. Overwriting with new configs."
     else
         log_info "[+] No existing config found. Proceeding with installation."
     fi
@@ -832,7 +817,7 @@ main() {
     post_install_checks
     dryrun_summary
 
-    log_success "\nAll done! Enjoy the fresh Niri-laniakea setup with a live wallpaper which will be generated at every boot after a few seconds or with Mod+L \n"
+    log_success "\nAll done! Enjoy the fresh Niri-laniakea setup with a beautiful live wallpaper which will be generated at every boot after a few seconds or with Mod+L\n"
 }
 
 main
