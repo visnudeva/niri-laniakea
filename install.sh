@@ -376,8 +376,9 @@ style=kvantum
 QT6CT_EOF
         log_success "[+] Applied Qt theme and icons via qt6ct."
         
-        # Create XDG config directories if they don't exist
+        # Create XDG config directories if they don't exist and ensure permissions
         mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
+        chmod 755 "$HOME/.config" "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0" 2>/dev/null || true
 
         # Find the first available Laniakea Kvantum theme
         local kvantum_theme=""
@@ -474,13 +475,51 @@ QT6CT_EOF
         fi
         
         log_success "[+] GTK config files updated for GTK-3, GTK-4 and GTK-2 compatibility."
+        
+        # Set environment variables to ensure theme persistence across sessions
+        local profile_file="$HOME/.profile"
+        
+        # Remove old theme settings if they exist
+        sed -i '/# Niri-Laniakea Theme Settings/d' "$profile_file" 2>/dev/null || true
+        sed -i '/export GTK_THEME/d' "$profile_file" 2>/dev/null || true
+        sed -i '/export GTK2_RC_FILES/d' "$profile_file" 2>/dev/null || true
+        
+        # Add new theme settings to profile
+        {
+            echo ""
+            echo "# Niri-Laniakea Theme Settings"
+            echo "export GTK_THEME=$gtk_theme"
+            echo "export GTK2_RC_FILES=$HOME/.gtkrc-2.0"
+            echo "# Ensure gsettings is run after desktop environment loads"
+            echo "(sleep 5 && gsettings set org.gnome.desktop.interface gtk-theme '$gtk_theme' 2>/dev/null) &"
+            echo ""
+        } >> "$profile_file"
+        
+        # Also add to .bashrc for terminal sessions
+        local bashrc_file="$HOME/.bashrc"
+        if [[ -f "$bashrc_file" ]]; then
+            sed -i '/# Niri-Laniakea Theme Settings/d' "$bashrc_file" 2>/dev/null || true
+            sed -i '/export GTK_THEME/d' "$bashrc_file" 2>/dev/null || true
+            sed -i '/export GTK2_RC_FILES/d' "$bashrc_file" 2>/dev/null || true
+            
+            {
+                echo ""
+                echo "# Niri-Laniakea Theme Settings"
+                echo "export GTK_THEME=$gtk_theme"
+                echo "export GTK2_RC_FILES=$HOME/.gtkrc-2.0"
+                echo ""
+            } >> "$bashrc_file"
+        fi
+        
+        log_success "[+] Added theme settings to user profile for session persistence."
     fi
 }
 
 setup_wallpaper() {
-    # This function is no longer needed as we're using the laniakea-live-wallpaper
-    # Static wallpaper setup has been completely removed
-    log_info "[+] Skipping static wallpaper setup (using live wallpaper only)..."
+    # Static wallpaper setup has been completely removed - only live wallpaper is used
+    # This function is kept as a placeholder to maintain script structure
+    # but does nothing since static wallpaper is no longer supported
+    :
 }
 
 install_gtk_kvantum_themes() {
