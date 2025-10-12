@@ -502,7 +502,6 @@ QT6CT_EOF
 }
 
 setup_wallpaper() {
-    # Static wallpaper setup has been completely removed - only live wallpaper is used
     # This function is kept as a placeholder to maintain script structure
     # but does nothing since static wallpaper is no longer supported
     :
@@ -588,7 +587,7 @@ install_laniakea_live_wallpaper() {
             else
                 # Start the wallpaper service once to set the wallpaper
                 systemctl --user start wallpaper.service
-                log_success "[+] Laniakea Live Wallpaper services enabled and started (no automatic updates)."
+                log_success "[+] Laniakea Live Wallpaper services enabled and started."
             fi
         else
             log_error "[!] Laniakea Live Wallpaper installation script not found. Skipping."
@@ -671,7 +670,6 @@ post_install_checks() {
     done
     [[ -d "$CONFIG_TARGET" ]] && log_success "$CONFIG_TARGET exists." || log_error "$CONFIG_TARGET missing!"
     # Static wallpaper is no longer used; live wallpaper is used instead, checked separately below
-    log_info "Static wallpaper check skipped (using live wallpaper instead)."
     
     # Check for any of the expected Laniakea GTK themes
     if [[ -d "$HOME/.themes/Laniakea-Cybersakura-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Bluemoon-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Dreamvapor-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Duskrose-Gtk" ]] || [[ -d "$HOME/.themes/Laniakea-Shadowfern-Gtk" ]]; then
@@ -834,7 +832,7 @@ main() {
     post_install_checks
     dryrun_summary
 
-    log_success "\nAll done! niri-laniakea setup is complete, you now have a fresh Niri installation with its dotfiles and a beautiful wallpaper, to ensure everything is applied successfully please reboot or logout and log back in and enjoy your new sleek system!\n"
+    log_success "\nAll done! Enjoy the fresh Niri-laniakea setup with a live wallpaper which will be generated at every boot after a few seconds or with Mod+L \n"
 }
 
 main
