@@ -291,13 +291,13 @@ copy_dotfiles() {
 setup_theming() {
     log_info "[+] Applying theme and icons..."
     if (( DRYRUN )); then
-        DRYRUN_SUMMARY+=("Would apply Laniakea-Cybersakura theme via nwg-look")
+        DRYRUN_SUMMARY+=("Would apply Laniakea-Cybersakura-Gtk theme via gsettings")
         DRYRUN_SUMMARY+=("Would apply Tela-circle-dracula icon theme via qt6ct")
-        DRYRUN_SUMMARY+=("Would apply Laniakea-Cybersakura theme in Kvantum")
+        DRYRUN_SUMMARY+=("Would apply Laniakea-Cybersakura-Kvantum theme in Kvantum")
     else
         # Set GTK theme using nwg-look
         if command -v gsettings &>/dev/null; then
-            gsettings set org.gnome.desktop.interface gtk-theme "Laniakea-Cybersakura"
+            gsettings set org.gnome.desktop.interface gtk-theme "Laniakea-Cybersakura-Gtk"
             gsettings set org.gnome.desktop.interface icon-theme "Tela-circle-dracula"
             log_success "[+] Applied GTK theme and icon theme via gsettings."
         else
@@ -372,6 +372,13 @@ QT6CT_EOF
             fi
         else
             log_error "[!] kvantummanager not found, but theme config was set."
+        fi
+        
+        # Additionally, set the GTK theme using multiple methods to ensure it's applied
+        if command -v nwg-look &>/dev/null; then
+            # Set GTK theme using nwg-look as a backup method
+            nwg-look -a "Laniakea-Cybersakura-Gtk"
+            log_success "[+] Applied GTK theme via nwg-look as additional method."
         fi
     fi
 }
@@ -575,7 +582,7 @@ post_install_checks() {
     # Check if GTK theme is set correctly
     local current_gtk_theme
     current_gtk_theme=$(gsettings get org.gnome.desktop.interface gtk-theme 2>/dev/null || echo "(command not available)")
-    if [[ "$current_gtk_theme" == *Laniakea* ]]; then
+    if [[ "$current_gtk_theme" == *Laniakea*-Gtk* ]]; then
         log_success "GTK theme properly set to: $current_gtk_theme"
     else
         log_error "GTK theme not set correctly. Current: $current_gtk_theme"
