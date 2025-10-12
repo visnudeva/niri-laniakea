@@ -558,6 +558,22 @@ install_laniakea_live_wallpaper() {
             bash "$CLONE_DIR/laniakea-live-wallpaper/install-laniakea-live-wallpaper.sh"
             log_success "[+] Laniakea Live Wallpaper installed."
             
+            # Create wallpaper.timer to periodically update the wallpaper
+            mkdir -p "$HOME/.config/systemd/user"
+            cat > "$HOME/.config/systemd/user/wallpaper.timer" << 'TIMER_EOF'
+[Unit]
+Description=Timer for Laniakea Live Wallpaper
+Requires=wallpaper.service
+
+[Timer]
+# Run every 30 minutes to update the wallpaper
+OnBootSec=1min
+OnUnitActiveSec=30min
+
+[Install]
+WantedBy=timers.target
+TIMER_EOF
+            
             # Wait a bit for the installation to complete before starting services
             sleep 2
             
