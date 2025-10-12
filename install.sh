@@ -375,6 +375,9 @@ ignored_applications=@Invalid()
 style=kvantum
 QT6CT_EOF
         log_success "[+] Applied Qt theme and icons via qt6ct."
+        
+        # Create XDG config directories if they don't exist
+        mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
 
         # Find the first available Laniakea Kvantum theme
         local kvantum_theme=""
@@ -437,13 +440,47 @@ QT6CT_EOF
                 log_error "[!] No Laniakea GTK theme found for nwg-look."
             fi
         fi
+        
+        # Set GTK theme using XDG config files as another fallback method
+        local config_dir="$HOME/.config"
+        mkdir -p "$config_dir"
+        
+        # Update settings.ini file
+        local settings_file="$config_dir/gtk-3.0/settings.ini"
+        mkdir -p "$(dirname "$settings_file")"
+        
+        # Create or update the settings.ini file to set the theme
+        {
+            echo "[Settings]"
+            echo "gtk-theme-name=$gtk_theme"
+            echo "gtk-icon-theme-name=Tela-circle-dracula"
+            echo "gtk-cursor-theme-name=capitaine-cursors"
+            echo "gtk-cursor-theme-size=24"
+            echo "gtk-application-prefer-dark-theme=1"
+        } > "$settings_file"
+        
+        # Also create gtkrc file for GTK-2 applications
+        local gtkrc_file="$HOME/.gtkrc-2.0"
+        {
+            echo "gtk-theme-name=\"$gtk_theme\""
+            echo "gtk-icon-theme-name=\"Tela-circle-dracula\""
+            echo "gtk-cursor-theme-name=\"capitaine-cursors\""
+        } > "$gtkrc_file"
+        
+        # Create gtk-4 config directory if it doesn't exist and link to gtk-3 config
+        mkdir -p "$config_dir/gtk-4.0"
+        if [[ ! -f "$config_dir/gtk-4.0/settings.ini" ]]; then
+            cp "$settings_file" "$config_dir/gtk-4.0/settings.ini" 2>/dev/null || true
+        fi
+        
+        log_success "[+] GTK config files updated for GTK-3, GTK-4 and GTK-2 compatibility."
     fi
 }
 
 setup_wallpaper() {
-    # This function is kept for backward compatibility but will be skipped
-    # since we're now using the laniakea-live-wallpaper
-    log_info "[+] Skipping static wallpaper setup (using live wallpaper instead)..."
+    # This function is no longer needed as we're using the laniakea-live-wallpaper
+    # Static wallpaper setup has been completely removed
+    log_info "[+] Skipping static wallpaper setup (using live wallpaper only)..."
 }
 
 install_gtk_kvantum_themes() {
@@ -636,13 +673,25 @@ post_install_checks() {
         log_error "Icon theme not set correctly. Current: $current_icon_theme"
     fi
     
-    # Check if GTK theme is set correctly
+    # Check if GTK theme is set correctly (try gsettings first, then config files)
     local current_gtk_theme
     current_gtk_theme=$(gsettings get org.gnome.desktop.interface gtk-theme 2>/dev/null || echo "(command not available)")
     if [[ "$current_gtk_theme" == *Laniakea*-Gtk* ]]; then
         log_success "GTK theme properly set to: $current_gtk_theme"
     else
-        log_error "GTK theme not set correctly. Current: $current_gtk_theme"
+        # If gsettings doesn't show the theme, check the config file
+        local config_theme=""
+        if [[ -f "$HOME/.config/gtk-3.0/settings.ini" ]]; then
+            config_theme=$(grep "gtk-theme-name" "$HOME/.config/gtk-3.0/settings.ini" | cut -d'=' -f2 | tr -d '"' | xargs)
+        elif [[ -f "$HOME/.gtkrc-2.0" ]]; then
+            config_theme=$(grep "gtk-theme-name" "$HOME/.gtkrc-2.0" | cut -d'"' -f2)
+        fi
+        
+        if [[ -n "$config_theme" && "$config_theme" == *Laniakea*-Gtk* ]]; then
+            log_success "GTK theme properly configured in config files: $config_theme"
+        else
+            log_error "GTK theme not set correctly. Current (gsettings): $current_gtk_theme, Current (config): $config_theme"
+        fi
     fi
 }
 
