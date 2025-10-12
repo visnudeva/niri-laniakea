@@ -422,24 +422,10 @@ QT6CT_EOF
             log_error "[!] No Laniakea Kvantum theme found to apply."
         fi
         
-        # Additionally, set the GTK theme using multiple methods to ensure it's applied
+        # Note: nwg-look is available but we'll rely on gsettings and config files
+        # as they are more reliable for theme persistence
         if command -v nwg-look &>/dev/null; then
-            # Find the first available Laniakea GTK theme for nwg-look
-            local gtk_theme=""
-            for theme_dir in "$HOME/.themes/Laniakea-"*"-Gtk"; do
-                if [[ -d "$theme_dir" ]]; then
-                    gtk_theme=$(basename "$theme_dir")
-                    break
-                fi
-            done
-            
-            if [[ -n "$gtk_theme" ]]; then
-                # Set GTK theme using nwg-look as a backup method
-                nwg-look -a "$gtk_theme"
-                log_success "[+] Applied GTK theme '$gtk_theme' via nwg-look as additional method."
-            else
-                log_error "[!] No Laniakea GTK theme found for nwg-look."
-            fi
+            log_info "[+] nwg-look is available, but relying on gsettings and config files for theme application."
         fi
         
         # Set GTK theme using XDG config files as another fallback method
