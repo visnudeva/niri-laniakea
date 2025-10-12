@@ -195,8 +195,10 @@ layout {
         // Color of the border around windows that request your attention.
         urgent-color "#9b0000"
 
-        active-gradient from="#cca9e8" to="#141414" angle=180 relative-to="workspace-view"
+        // active-gradient from="#cca9e8" to="#141414" angle=180 relative-to="workspace-view"
         // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+        
+        active-gradient from="#cca9e8" to="#f8bcbc" angle=180 in="oklch longer hue"
     }
 
     // You can enable drop shadows for windows.
