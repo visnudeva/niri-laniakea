@@ -290,18 +290,50 @@ copy_dotfiles() {
 
 setup_theming() {
     log_info "[+] Applying theme and icons..."
+    
+    # Find the first available Laniakea GTK theme
+    local gtk_theme=""
+    for theme_dir in "$HOME/.themes/Laniakea-"*"-Gtk"; do
+        if [[ -d "$theme_dir" ]]; then
+            gtk_theme=$(basename "$theme_dir")
+            break
+        fi
+    done
+    
+    # Find the first available Laniakea Kvantum theme
+    local kvantum_theme=""
+    for theme_dir in "$HOME/.config/Kvantum/Laniakea-"*"-Kvantum"; do
+        if [[ -d "$theme_dir" ]]; then
+            kvantum_theme=$(basename "$theme_dir")
+            break
+        fi
+    done
+    
     if (( DRYRUN )); then
-        DRYRUN_SUMMARY+=("Would apply Laniakea-Cybersakura-Gtk theme via gsettings")
-        DRYRUN_SUMMARY+=("Would apply Tela-circle-dracula icon theme via qt6ct")
-        DRYRUN_SUMMARY+=("Would apply Laniakea-Cybersakura-Kvantum theme in Kvantum")
-    else
-        # Set GTK theme using nwg-look
-        if command -v gsettings &>/dev/null; then
-            gsettings set org.gnome.desktop.interface gtk-theme "Laniakea-Cybersakura-Gtk"
-            gsettings set org.gnome.desktop.interface icon-theme "Tela-circle-dracula"
-            log_success "[+] Applied GTK theme and icon theme via gsettings."
+        if [[ -n "$gtk_theme" ]]; then
+            DRYRUN_SUMMARY+=("Would apply $gtk_theme theme via gsettings")
         else
-            log_error "[!] gsettings command not found, skipping GTK theme application."
+            DRYRUN_SUMMARY+=("Would attempt to apply GTK theme, but no Laniakea GTK theme found")
+        fi
+        DRYRUN_SUMMARY+=("Would apply Tela-circle-dracula icon theme via qt6ct")
+        if [[ -n "$kvantum_theme" ]]; then
+            DRYRUN_SUMMARY+=("Would apply $kvantum_theme theme in Kvantum")
+        else
+            DRYRUN_SUMMARY+=("Would attempt to apply Kvantum theme, but no Laniakea Kvantum theme found")
+        fi
+    else
+        # Set GTK theme using gsettings - finding the first available Laniakea theme
+        if [[ -n "$gtk_theme" ]] && command -v gsettings &>/dev/null; then
+            gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
+            gsettings set org.gnome.desktop.interface icon-theme "Tela-circle-dracula"
+            log_success "[+] Applied GTK theme '$gtk_theme' and icon theme via gsettings."
+        else
+            if [[ -z "$gtk_theme" ]]; then
+                log_error "[!] No Laniakea GTK theme found to apply."
+            fi
+            if ! command -v gsettings &>/dev/null; then
+                log_error "[!] gsettings command not found, skipping GTK theme application."
+            fi
         fi
 
         # Set Qt theme via qt6ct
@@ -344,41 +376,66 @@ style=kvantum
 QT6CT_EOF
         log_success "[+] Applied Qt theme and icons via qt6ct."
 
+        # Find the first available Laniakea Kvantum theme
+        local kvantum_theme=""
+        for theme_dir in "$HOME/.config/Kvantum/Laniakea-"*"-Kvantum"; do
+            if [[ -d "$theme_dir" ]]; then
+                kvantum_theme=$(basename "$theme_dir")
+                break
+            fi
+        done
+        
         # Apply Kvantum theme with verification
         local kvantum_config="$HOME/.config/Kvantum/kvantum.kvconfig"
-        local kvantum_theme="Laniakea-Cybersakura-Kvantum"
         
-        # Create Kvantum config directory if it doesn't exist
-        mkdir -p "$HOME/.config/Kvantum"
-        
-        if [[ -f "$kvantum_config" ]]; then
-            sed -i "s/^theme=.*/theme=$kvantum_theme/" "$kvantum_config"
-            log_success "[+] Applied Kvantum theme '$kvantum_theme' to existing config."
-        else
-            # Create the config file with the theme setting
-            echo "[General]" > "$kvantum_config"
-            echo "theme=$kvantum_theme" >> "$kvantum_config"
-            log_success "[+] Created Kvantum config with theme '$kvantum_theme'."
-        fi
-        
-        # Apply the theme using kvantummanager to ensure it's properly activated
-        if command -v kvantummanager &>/dev/null; then
-            # Wait a bit for the config to be written
-            sleep 1
-            if kvantummanager --set "$kvantum_theme" 2>/dev/null; then
-                log_success "[+] Kvantum theme '$kvantum_theme' successfully applied via kvantummanager."
+        if [[ -n "$kvantum_theme" ]]; then
+            # Create Kvantum config directory if it doesn't exist
+            mkdir -p "$HOME/.config/Kvantum"
+            
+            if [[ -f "$kvantum_config" ]]; then
+                sed -i "s/^theme=.*/theme=$kvantum_theme/" "$kvantum_config"
+                log_success "[+] Applied Kvantum theme '$kvantum_theme' to existing config."
             else
-                log_error "[!] Failed to apply Kvantum theme via kvantummanager."
+                # Create the config file with the theme setting
+                echo "[General]" > "$kvantum_config"
+                echo "theme=$kvantum_theme" >> "$kvantum_config"
+                log_success "[+] Created Kvantum config with theme '$kvantum_theme'."
+            fi
+            
+            # Apply the theme using kvantummanager to ensure it's properly activated
+            if command -v kvantummanager &>/dev/null; then
+                # Wait a bit for the config to be written
+                sleep 1
+                if kvantummanager --set "$kvantum_theme" 2>/dev/null; then
+                    log_success "[+] Kvantum theme '$kvantum_theme' successfully applied via kvantummanager."
+                else
+                    log_error "[!] Failed to apply Kvantum theme via kvantummanager."
+                fi
+            else
+                log_error "[!] kvantummanager not found, but theme config was set."
             fi
         else
-            log_error "[!] kvantummanager not found, but theme config was set."
+            log_error "[!] No Laniakea Kvantum theme found to apply."
         fi
         
         # Additionally, set the GTK theme using multiple methods to ensure it's applied
         if command -v nwg-look &>/dev/null; then
-            # Set GTK theme using nwg-look as a backup method
-            nwg-look -a "Laniakea-Cybersakura-Gtk"
-            log_success "[+] Applied GTK theme via nwg-look as additional method."
+            # Find the first available Laniakea GTK theme for nwg-look
+            local gtk_theme=""
+            for theme_dir in "$HOME/.themes/Laniakea-"*"-Gtk"; do
+                if [[ -d "$theme_dir" ]]; then
+                    gtk_theme=$(basename "$theme_dir")
+                    break
+                fi
+            done
+            
+            if [[ -n "$gtk_theme" ]]; then
+                # Set GTK theme using nwg-look as a backup method
+                nwg-look -a "$gtk_theme"
+                log_success "[+] Applied GTK theme '$gtk_theme' via nwg-look as additional method."
+            else
+                log_error "[!] No Laniakea GTK theme found for nwg-look."
+            fi
         fi
     fi
 }
