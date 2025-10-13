@@ -2,7 +2,7 @@ ignore-empty-password
 daemonize
 image=.config/swaylock/default.png
 color=1a161e
-indicator-radius=400
+indicator-radius=200
 indicator-thickness=20
 
 inside-color=1a161e00
