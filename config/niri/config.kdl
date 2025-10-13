@@ -72,7 +72,7 @@ input {
 output "eDP-1" {
     // Uncomment this line to disable this output.
     // off
- 
+
     // Resolution and, optionally, refresh rate of the output.
     // The format is "<width>x<height>" or "<width>x<height>@<refresh rate>".
     // If the refresh rate is omitted, niri will pick the highest refresh rate
@@ -197,7 +197,7 @@ layout {
 
         // active-gradient from="#cca9e8" to="#141414" angle=180 relative-to="workspace-view"
         // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
-        
+
         active-gradient from="#cca9e8" to="#f8bcbc" angle=180 in="oklch longer hue"
     }
 
@@ -213,13 +213,13 @@ layout {
         // radius. It has to assume that windows have square corners, leading to
         // shadow artifacts inside the CSD rounded corners. This setting fixes
         // those artifacts.
-        // 
+        //
         // However, instead you may want to set prefer-no-csd and/or
         // geometry-corner-radius. Then, niri will know the corner radius and
         // draw the shadow correctly, without having to draw it behind the
         // window. These will also remove client-side shadows if the window
         // draws any.
-        // 
+        //
         // draw-behind-window true
 
         // You can change how shadows look. The values below are in logical
@@ -267,7 +267,7 @@ spawn-sh-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 
 spawn-at-startup "xwayland-satellite"
 environment {
-    DISPLAY ":0"    
+    DISPLAY ":0"
 }
 
 // Uncomment this line to ask the clients to omit their client-side decorations if possible.
@@ -294,7 +294,7 @@ cursor {
 overview {
     zoom 0.5
     backdrop-color "#141414"
-    
+
     workspace-shadow {
         //off
         softness 1
@@ -302,7 +302,7 @@ overview {
         offset x=0 y=0
         color "#808080"
     }
-    
+
 }
 hotkey-overlay {
     skip-at-startup
@@ -325,13 +325,13 @@ switch-events {
 // The wiki explains how to configure individual animations:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Animations
 animations {
-	
+
     // Uncomment to turn off all animations.
     // off
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
     // slowdown 3.0
-    
+
 }
 
 
@@ -360,6 +360,7 @@ window-rule {
 window-rule {
     match app-id="firefox"
     match app-id="gimp"
+    match app-id="zed"
     open-maximized true
     draw-border-with-background false
 }
@@ -436,13 +437,13 @@ binds {
     Mod+SPACE hotkey-overlay-title="Open the menu: fuzzel" { spawn "fuzzel"; }
     Mod+B hotkey-overlay-title="Open the web browser: firefox" { spawn "firefox"; }
     Mod+I hotkey-overlay-title="Open the IDE: geany" { spawn "geany"; }
-    Mod+F hotkey-overlay-title="Open the file manager: thunar" { spawn "thunar"; }    
+    Mod+Z hotkey-overlay-title="Open the IDE: zed" { spawn "zeditor"; }
+    Mod+F hotkey-overlay-title="Open the file manager: thunar" { spawn "thunar"; }
     Mod+E hotkey-overlay-title="Open the logout menu: fuzzel" { spawn-sh "~/.config/fuzzel/fuzzel-logout.sh"; }
 	// Mod+L hotkey-overlay-title="Lock the screen: swaylock" { spawn "swaylock"; }
 	Mod+W hotkey-overlay-title="Toggle Waybar" { spawn-sh "pgrep waybar && pkill waybar || setsid waybar"; }
 	Mod+S hotkey-overlay-title="Open Stremio" { spawn "stremio"; }
-	Mod+D hotkey-overlay-title="Open Qbittorrent" { spawn "qbittorrent"; }
-	
+
 	// Mod+L hotkey-overlay-title="Reload Wallpaper Service" { spawn-sh "systemctl --user daemon-reload && systemctl --user restart wallpaper.service"; }
 	Mod+L hotkey-overlay-title="Reload Wallpaper Service" { spawn-sh "systemctl --user start wallpaper.service"; }
 
@@ -590,35 +591,35 @@ XF86MonBrightnessDown allow-when-locked=true {
     //
     // For example, with 2 workspaces + 1 empty, indices 3, 4, 5 and so on
     // will all refer to the 3rd workspace.
-    
+
     Mod+1 {
-    spawn "sh" "-c" "niri msg action focus-workspace 1; notify-send '	workspace 1'"
+    spawn-sh "niri msg action focus-workspace 1; notify-send '	workspace 1'"
 }
     Mod+2 {
-    spawn "sh" "-c" "niri msg action focus-workspace 2; notify-send '	workspace 2'"
+    spawn-sh "niri msg action focus-workspace 2; notify-send '	workspace 2'"
 }
     Mod+3 {
-    spawn "sh" "-c" "niri msg action focus-workspace 3; notify-send '	workspace 3'"
+    spawn-sh "niri msg action focus-workspace 3; notify-send '	workspace 3'"
 }
     Mod+4 {
-    spawn "sh" "-c" "niri msg action focus-workspace 4; notify-send '	workspace 4'"
+    spawn-sh "niri msg action focus-workspace 4; notify-send '	workspace 4'"
 }
     Mod+5 {
-    spawn "sh" "-c" "niri msg action focus-workspace 5; notify-send '	workspace 5'"
+    spawn-sh "niri msg action focus-workspace 5; notify-send '	workspace 5'"
 }
     Mod+6 {
-    spawn "sh" "-c" "niri msg action focus-workspace 6; notify-send '	workspace 6'"
+    spawn-sh "niri msg action focus-workspace 6; notify-send '	workspace 6'"
 }
     Mod+7 {
-    spawn "sh" "-c" "niri msg action focus-workspace 7; notify-send '	workspace 7'"
+    spawn-sh "niri msg action focus-workspace 7; notify-send '	workspace 7'"
 }
     Mod+8 {
-    spawn "sh" "-c" "niri msg action focus-workspace 8; notify-send '	workspace 8'"
+    spawn-sh "niri msg action focus-workspace 8; notify-send '	workspace 8'"
 }
     Mod+9 {
-    spawn "sh" "-c" "niri msg action focus-workspace 9; notify-send '	workspace 9'"
+    spawn-sh "niri msg action focus-workspace 9; notify-send '	workspace 9'"
 }
-    
+
     //Mod+1 { focus-workspace 1; }
     //Mod+2 { focus-workspace 2; }
     //Mod+3 { focus-workspace 3; }
