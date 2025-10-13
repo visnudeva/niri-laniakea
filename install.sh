@@ -670,7 +670,7 @@ post_install_checks() {
         log_error "Kvantum themes missing!"
     fi
     
-    [[ -f "$HOME/Pictures/Wallpapers/index.html" ]] && log_success "Laniakea Live Wallpaper installed." || log_error "Laniakea Live Wallpaper missing!"
+    [[ -f "$HOME/.config/laniakea-live-wallpaper/playwright_capture_wallpaper.py" ]] && log_success "Laniakea Live Wallpaper installed." || log_error "Laniakea Live Wallpaper missing!"
     
     # Check if icon theme is set correctly
     local current_icon_theme
@@ -741,6 +741,7 @@ uninstall() {
         rm -rf "$HOME/.config/Kvantum/Laniakea-*"
         # Remove Laniakea Live Wallpaper files
         rm -rf "$HOME/Pictures/Wallpapers"
+        rm -rf "$HOME/.config/laniakea-live-wallpaper"
         rm -f "$HOME/.config/systemd/user/swww-daemon.service"
         rm -f "$HOME/.config/systemd/user/wallpaper.service"
         log_success "[+] Uninstall complete."
@@ -809,7 +810,7 @@ main() {
     backup_config
     merge_or_diff_dotfiles
     copy_dotfiles
-    install_gtk_kvantum_themes  # Install themes before applying them
+    install_gtk_kvantum_themes
     setup_theming
     setup_wallpaper
     install_laniakea_live_wallpaper
