@@ -259,7 +259,7 @@ layout {
 // This line starts waybar, a commonly used bar for Wayland compositors.
 spawn-at-startup "waybar"
 spawn-at-startup "mako"
-// spawn-at-startup "sh" "-c" "sleep 1 && swaybg -o eDP-1 -i \"$HOME/.config/niri/Laniakea.png\" -m fill"
+// spawn-sh-at-startup "sleep 1 && swaybg -o eDP-1 -i \"$HOME/.config/niri/Laniakea.png\" -m fill"
 
 spawn-at-startup "swayidle" "-w" "timeout" "600" "bash -c '[[ $(playerctl status 2>/dev/null) != Playing ]] && swaylock --daemonize && systemctl suspend'" "before-sleep" "swaylock --daemonize"
 spawn-sh-at-startup "sleep 20 && ivpn connect -f"
