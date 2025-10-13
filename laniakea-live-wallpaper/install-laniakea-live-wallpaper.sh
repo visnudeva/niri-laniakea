@@ -2,15 +2,21 @@
 
 echo "Creating the wallpaper generation script..."
 
+# Create the directory if it doesn't exist
+mkdir -p ~/.config/laniakea-live-wallpaper
+
+# Copy the Python script to the new location
+cp "$(dirname "$0")/playwright_capture_wallpaper.py" ~/.config/laniakea-live-wallpaper/
+
 # Create a wrapper script that ensures the wallpaper is properly generated
-cat > ~/Pictures/Wallpapers/wallpaper_generator.sh << 'GENERATOR_EOF'
+cat > ~/.config/laniakea-live-wallpaper/wallpaper_generator.sh << 'GENERATOR_EOF'
 #!/bin/bash
 
 # Wallpaper generator that handles timing issues on slower systems
 
 WALLPAPER_PATH="/tmp/Laniakea.png"
-PYTHON_SCRIPT="$HOME/Pictures/Wallpapers/laniakea_env/bin/python"
-WALLPAPER_GENERATOR="$HOME/Pictures/Wallpapers/playwright_capture_wallpaper.py"
+PYTHON_SCRIPT="$HOME/.config/laniakea-live-wallpaper/laniakea_env/bin/python"
+WALLPAPER_GENERATOR="$HOME/.config/laniakea-live-wallpaper/playwright_capture_wallpaper.py"
 
 # Wait for the swww daemon to be running
 echo "Waiting for swww daemon to be ready..."
@@ -58,7 +64,7 @@ else
 fi
 GENERATOR_EOF
 
-chmod +x ~/Pictures/Wallpapers/wallpaper_generator.sh
+chmod +x ~/.config/laniakea-live-wallpaper/wallpaper_generator.sh
 
 echo "Updated wallpaper.service"
 
@@ -73,7 +79,7 @@ Type=oneshot
 ExecStartPre=/bin/sleep 5
 
 # Use the wallpaper generator script
-ExecStart=%h/Pictures/Wallpapers/wallpaper_generator.sh
+ExecStart=%h/.config/laniakea-live-wallpaper/wallpaper_generator.sh
 
 [Install]
 WantedBy=graphical-session.target
