@@ -16,7 +16,6 @@ Main keybindings:
     - Mod+F thunar (file manager)
     - Mod+T kitty (terminal)
     - Mod+I geany (IDE)
-    - Mod+Z zed (IDE)
     - Mod+W waybar (show/hide)
     - Mod+M maximise/minimise window (100%/50% width)
     - Mod+L generate new Laniakea wallpaper
