@@ -150,7 +150,7 @@ layout {
     // You can change how the focus ring looks.
     focus-ring {
         // Uncomment this line to disable the focus ring.
-        off
+        // off
 
         // How many logical pixels the ring extends out from the windows.
         width 1
@@ -173,7 +173,8 @@ layout {
         // You can use any CSS linear-gradient tool on the web to set these up.
         // Changing the color space is also supported, check the wiki for more info.
         //
-        active-gradient from="#DDDDDD" to="#141414" angle=180
+        // active-gradient from="#DDDDDD" to="#141414" angle=180
+        active-gradient from="#cca9e8" to="#f8bcbc" angle=180 in="oklch longer hue"
 
         // You can also color the gradient relative to the entire view
         // of the workspace, rather than relative to just the window itself.
@@ -186,7 +187,7 @@ layout {
     border {
         // The settings are the same as for the focus ring.
         // If you enable the border, you probably want to disable the focus ring.
-        // off
+         off
 
         width 1
         // active-color "#DDDDDD"
@@ -360,7 +361,6 @@ window-rule {
 window-rule {
     match app-id="firefox"
     match app-id="gimp"
-    match app-id="zed"
     open-maximized true
     draw-border-with-background false
 }
@@ -378,6 +378,7 @@ window-rule {
 }
 window-rule {
     match app-id="kitty"
+    match app-id="thunar"
     draw-border-with-background false
 }
 window-rule {
