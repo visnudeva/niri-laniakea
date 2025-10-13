@@ -14,11 +14,12 @@ Main keybindings:
     - Mod+E fuzzel (logout menu)
     - Mod+B firefox (web browser)
     - Mod+F thunar (file manager)
-    - Mod+L generate new Laniakea wallpaper
     - Mod+T kitty (terminal)
     - Mod+I geany (IDE)
+    - Mod+Z zed (IDE)
     - Mod+W waybar (show/hide)
     - Mod+M maximise/minimise window (100%/50% width)
+    - Mod+L generate new Laniakea wallpaper
 
 Cybersakura:
 ![screenshot4](https://github.com/visnudeva/niri-laniakea-themes/blob/main/Screenshot4.png)
