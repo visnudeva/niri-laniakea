@@ -437,36 +437,36 @@ binds {
     Mod+B hotkey-overlay-title="Open the web browser: firefox" { spawn "firefox"; }
     Mod+I hotkey-overlay-title="Open the IDE: geany" { spawn "geany"; }
     Mod+F hotkey-overlay-title="Open the file manager: thunar" { spawn "thunar"; }    
-    Mod+E hotkey-overlay-title="Open the logout menu: fuzzel" { spawn "bash" "-c" "~/.config/fuzzel/fuzzel-logout.sh"; }
+    Mod+E hotkey-overlay-title="Open the logout menu: fuzzel" { spawn-sh "~/.config/fuzzel/fuzzel-logout.sh"; }
 	// Mod+L hotkey-overlay-title="Lock the screen: swaylock" { spawn "swaylock"; }
-	Mod+W hotkey-overlay-title="Toggle Waybar" { spawn "bash" "-c" "pgrep waybar && pkill waybar || setsid waybar"; }
+	Mod+W hotkey-overlay-title="Toggle Waybar" { spawn-sh "pgrep waybar && pkill waybar || setsid waybar"; }
 	Mod+S hotkey-overlay-title="Open Stremio" { spawn "stremio"; }
 	Mod+D hotkey-overlay-title="Open Qbittorrent" { spawn "qbittorrent"; }
 	
-	// Mod+L hotkey-overlay-title="Reload Wallpaper Service" { spawn "bash" "-c" "systemctl --user daemon-reload && systemctl --user restart wallpaper.service"; }
-	Mod+L hotkey-overlay-title="Reload Wallpaper Service" { spawn "bash" "-c" "systemctl --user start wallpaper.service"; }
+	// Mod+L hotkey-overlay-title="Reload Wallpaper Service" { spawn-sh "systemctl --user daemon-reload && systemctl --user restart wallpaper.service"; }
+	Mod+L hotkey-overlay-title="Reload Wallpaper Service" { spawn-sh "systemctl --user start wallpaper.service"; }
 
     // Note: the entire command goes as a single argument in the end.
-    // Mod+T { spawn "bash" "-c" "notify-send hello && exec alacritty"; }
+    // Mod+T { spawn-sh "notify-send hello && exec alacritty"; }
 
     // Example volume keys mappings for PipeWire & WirePlumber.
     // The allow-when-locked=true property makes them work even when the session is locked.
 
 XF86AudioRaiseVolume allow-when-locked=true {
-  spawn "bash" "-c" "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ && notify-send 'Volume' \"$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2 * 100)}')%\""
+  spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ && notify-send 'Volume' \"$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2 * 100)}')%\""
 }
 XF86AudioLowerVolume allow-when-locked=true {
-  spawn "bash" "-c" "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1- && notify-send 'Volume' \"$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2 * 100)}')%\""
+  spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1- && notify-send 'Volume' \"$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2 * 100)}')%\""
 }
 
     XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
     XF86AudioMicMute     allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
 
 XF86MonBrightnessUp allow-when-locked=true {
-  spawn "bash" "-c" "brightnessctl set +10% && notify-send 'Brightness up'"
+  spawn-sh "brightnessctl set +10% && notify-send 'Brightness up'"
 }
 XF86MonBrightnessDown allow-when-locked=true {
-  spawn "bash" "-c" "brightnessctl set 10%- && notify-send 'Brightness down'"
+  spawn-sh "brightnessctl set 10%- && notify-send 'Brightness down'"
 }
 
     // Open/close the Overview: a zoomed-out view of workspaces and windows.
