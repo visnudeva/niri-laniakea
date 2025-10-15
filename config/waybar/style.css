@@ -2,15 +2,15 @@
 * {
     border: none;
     font-family: JetBrainsMono Nerd Font, monospace;
-    font-weight: bold;
     font-size: 14px;
-    min-height: 0px;
+    min-height: 10px;
+    background: #141414;
 }
 
 window#waybar {
 	border: none;
-    background: #141414;
-    color: #141414;
+    background: #1a161e;
+    color: #1a161e;
 }
 
 #window{
@@ -28,46 +28,43 @@ window#waybar {
 #pulseaudio,
 #tray,
 #backlight {
-    background: #141414;
-    padding: 0px 10px;
+	color: #cca9e8;
+    background: #272127;
+    padding: 0px 10px 0px 10px;
     margin: 5px 0px;
-    margin-top: 5px;
 }
 
 #clock {
     color: #cca9e8;
-    border-radius: 10px 10px 10px 10px;/* optional rounded edges */
+    padding: 2px 20px 0px 20px;
+    border-radius: 20px 20px 20px 20px;/* optional rounded edges */
     margin-left: 10px;
     margin-right: 10px;/* space outside */
 }
 
-#idle_inhibitor {
-	color: #cca9e8;
-	padding: 0px 5px;/* space inside the border */
-    border-radius: 10px;
-}
-
 #battery {
     color: #cca9e8;
-    border-radius: 10px 0px 0px 10px;
-    margin-left: 20px;
-}
-
-#backlight {
-    color: #cca9e8;
-    border-radius: 0px 0px 0px 0px;
+    padding: 2px 10px 0px 20px;
+    border-radius: 20px 0px 0px 20px;
 }
 
 #pulseaudio {
 	color: #cca9e8;
-    border-radius: 0px 10px 10px 0px;
+	padding: 2px 10px 0px 10px;
+    border-radius: 0px 0px 0px 0px;
+}
+
+#idle_inhibitor {
+	color: #cca9e8;
+	padding: 2px 20px 0px 10px;
+    border-radius: 0px 20px 20px 0px;
 }
 
 #tray {
 	color: #cca9e8;
 	border: 1px solid #cca9e8;
-	padding: 4px 12px;
-    border-radius: 10px;
+	padding: 4px 15px;
+    border-radius: 20px;
     margin-left: 10px;
     margin-right: 10px;
 }
