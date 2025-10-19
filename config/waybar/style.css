@@ -3,7 +3,7 @@
     border: none;
     font-family: JetBrainsMono Nerd Font, monospace;
     font-size: 14px;
-    min-height: 10px;
+    min-height: 20px;
     background: #141414;
 }
 
@@ -19,7 +19,6 @@ window#waybar {
 	border-radius: 10px;
     padding: 0px 10px;
     margin: 5px 0px;
-    margin-top: 5px;
 }
 
 #clock,
@@ -59,6 +58,15 @@ window#waybar {
 	padding: 0px 15px 0px 15px;
     border-radius: 20px;
     margin-left: 10px;
+    margin-right: 10px;
+}
+
+#power-profiles-daemon {
+	color: #cca9e8;
+	background: #272127;
+	padding: 0px 20px 0px 15px;
+    border-radius: 20px;
+    margin-left: 0px;
     margin-right: 10px;
 }
 
