@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
+import os
 import sys
 import asyncio
 from playwright.async_api import async_playwright
+
+# Define cache directory
+CACHE_DIR = os.path.expanduser("~/.cache/laniakea-live-wallpaper")
 
 async def generate_wallpaper_with_playwright(output_path, width=1920, height=1080):
     """Generate wallpaper using Playwright which is much faster than Selenium/Firefox"""
@@ -133,6 +137,13 @@ async def generate_wallpaper_with_playwright(output_path, width=1920, height=108
         await page.screenshot(path=output_path, type='png')
         
         print(f"Wallpaper captured and saved to {output_path}")
+        
+        # Also save to cache for future use
+        cache_path = os.path.join(CACHE_DIR, "cached_wallpaper.png")
+        os.makedirs(CACHE_DIR, exist_ok=True)
+        await page.screenshot(path=cache_path, type='png')
+        print(f"Wallpaper also cached to {cache_path}")
+        
         await browser.close()
 
 def capture_wallpaper(output_path):
