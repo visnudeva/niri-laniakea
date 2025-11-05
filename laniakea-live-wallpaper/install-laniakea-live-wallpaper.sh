@@ -120,4 +120,8 @@ SERVICE_EOF
 # Reload systemd configuration
 systemctl --user daemon-reload
 
-echo "Services have been reloaded."
+# Enable and start the wallpaper service
+systemctl --user enable wallpaper.service
+systemctl --user start wallpaper.service
+
+echo "Services have been reloaded, enabled, and started."
