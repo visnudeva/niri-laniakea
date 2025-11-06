@@ -687,6 +687,10 @@ post_install_checks() {
         log_info "[+] Skipping post-install checks in dry-run mode."
         return
     fi
+    
+    # Temporarily disable exit-on-error for this section
+    set +e
+    
     # Count successful and failed package installations
     local installed_count=0
     local total_count=${#PACKAGES[@]}
@@ -720,7 +724,7 @@ post_install_checks() {
     
     # Check if icon theme is set correctly
     local current_icon_theme
-    current_icon_theme=$(gsettings get org.gnome.desktop.interface icon-theme 2>/dev/null || echo "(command not available)") || true
+    current_icon_theme=$(gsettings get org.gnome.desktop.interface icon-theme 2>/dev/null || echo "(command not available)")
     if [[ "$current_icon_theme" == *Tela-circle* ]]; then
         log_success "Icon theme properly set to: $current_icon_theme"
     else
@@ -729,16 +733,16 @@ post_install_checks() {
     
     # Check if GTK theme is set correctly (try gsettings first, then config files)
     local current_gtk_theme
-    current_gtk_theme=$(gsettings get org.gnome.desktop.interface gtk-theme 2>/dev/null || echo "(command not available)") || true
+    current_gtk_theme=$(gsettings get org.gnome.desktop.interface gtk-theme 2>/dev/null || echo "(command not available)")
     if [[ "$current_gtk_theme" == *Laniakea*-Gtk* ]]; then
         log_success "GTK theme properly set to: $current_gtk_theme"
     else
         # If gsettings doesn't show the theme, check the config file
         local config_theme=""
         if [[ -f "$HOME/.config/gtk-3.0/settings.ini" ]]; then
-            config_theme=$(grep "gtk-theme-name" "$HOME/.config/gtk-3.0/settings.ini" | cut -d'=' -f2 | tr -d '"' | xargs || true)
+            config_theme=$(grep "gtk-theme-name" "$HOME/.config/gtk-3.0/settings.ini" | cut -d'=' -f2 | tr -d '"' | xargs)
         elif [[ -f "$HOME/.gtkrc-2.0" ]]; then
-            config_theme=$(grep "gtk-theme-name" "$HOME/.gtkrc-2.0" | cut -d'"' -f2 || true)
+            config_theme=$(grep "gtk-theme-name" "$HOME/.gtkrc-2.0" | cut -d'"' -f2)
         fi
         
         if [[ -n "$config_theme" && "$config_theme" == *Laniakea*-Gtk* ]]; then
@@ -747,6 +751,9 @@ post_install_checks() {
             log_error "GTK theme not set correctly. Current (gsettings): $current_gtk_theme, Current (config): $config_theme"
         fi
     fi
+    
+    # Re-enable exit-on-error
+    set -e
 }
 
 dryrun_summary() {
