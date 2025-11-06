@@ -4,7 +4,7 @@ set -e
 set -u
 
 # Initialize variables to prevent unbound variable errors
-SCRIPT_COMPLETED_SUCCESSFULLY=0
+SCRIPT_ABORTED=0
 
 # --- Color Output ---
 RED="\033[0;31m"
@@ -83,14 +83,21 @@ REQUIRED_CMDS=(git rsync pacman diff meld)
 DRYRUN_SUMMARY=()
 
 # --- Trap for cleanup on errors ---
+SCRIPT_ABORTED=0
+
+error_handler() {
+    SCRIPT_ABORTED=1
+}
+
+SCRIPT_ABORTED=0
 cleanup() {
-    # Only run cleanup if we're exiting with an error 
-    # Since we handle package failures gracefully, we only want to cleanup on genuine errors
-    if [[ $? -ne 0 && ${SCRIPT_COMPLETED_SUCCESSFULLY:-0} -ne 1 ]]; then
+    # Only run cleanup if script was aborted and not completed successfully
+    if [[ $SCRIPT_ABORTED -eq 1 ]]; then
         log_error "[!] Script failed or exited unexpectedly. Performing cleanup."
         # Add cleanup logic here if needed, e.g., removing temp files
     fi
 }
+trap 'error_handler' ERR
 trap cleanup EXIT
 
 # --- Functions ---
@@ -243,12 +250,13 @@ install_packages() {
         DRYRUN_SUMMARY+=("Would run: pacman -Syu --needed --noconfirm ${PACKAGES[*]}")
     else
         # Force a database sync before installing packages individually
-        $SUDO pacman -Sy --noconfirm || true
+        $SUDO pacman -Sy --noconfirm > /dev/null 2>&1 || true
         
         # Install packages one by one to handle conflicts gracefully
         for pkg in "${PACKAGES[@]}"; do
             log_info "[+] Installing package: $pkg"
-            if $SUDO pacman -S --needed --noconfirm "$pkg" || true; then
+            $SUDO pacman -S --needed --noconfirm "$pkg" > /dev/null 2>&1 || true
+            if pacman -Q "$pkg" &>/dev/null; then
                 log_success "[+] Package '$pkg' installed successfully."
             else
                 log_error "[!] Failed to install package '$pkg', skipping..."
@@ -273,7 +281,8 @@ install_aur_packages() {
             # Install AUR packages one by one to handle conflicts gracefully
             for aur_pkg in "${AUR_PACKAGES[@]}"; do
                 log_info "[+] Installing AUR package: $aur_pkg"
-                if "$aur_helper" -S --noconfirm "$aur_pkg" || true; then
+                "$aur_helper" -S --noconfirm "$aur_pkg" > /dev/null 2>&1 || true
+                if pacman -Q "$aur_pkg" &>/dev/null; then
                     log_success "[+] AUR package '$aur_pkg' installed successfully."
                 else
                     log_error "[!] Failed to install AUR package '$aur_pkg', skipping..."
@@ -865,8 +874,8 @@ main() {
     post_install_checks
     dryrun_summary
 
-    # Set flag to indicate successful completion
-    SCRIPT_COMPLETED_SUCCESSFULLY=1
+    # Don't mark as aborted since we're completing successfully
+    SCRIPT_ABORTED=0
     log_success "\nAll done! Enjoy the fresh Niri-laniakea setup with a beautiful live wallpaper which will be generated at every boot after a few seconds or with Mod+L\n"
     
     # Remove trap since we're exiting successfully
