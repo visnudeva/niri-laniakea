@@ -66,7 +66,7 @@ SUDO=""
 
 PACKAGES=(
     acpi blueman bluez bluez-utils brightnessctl capitaine-cursors 
-    fish geany gvfs kitty kvantum kvantum-qt5 libnotify mako 
+    fish geany fuzzel gvfs kitty kvantum kvantum-qt5 libnotify mako 
     network-manager-applet networkmanager nm-connection-editor 
     niri nwg-look pamixer pavucontrol pipewire pipewire-alsa 
     pipewire-jack pipewire-audio pipewire-pulse polkit-gnome 
