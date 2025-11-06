@@ -72,6 +72,7 @@ window#waybar {
 
 #tray {
 	color: #cca9e8;
+	background: #141414;
 	border: 1px solid #cca9e8;
 	padding: 0px 15px 0px 15px;
     border-radius: 20px;
