@@ -3,6 +3,9 @@
 set -e
 set -u
 
+# Initialize variables to prevent unbound variable errors
+SCRIPT_COMPLETED_SUCCESSFULLY=0
+
 # --- Color Output ---
 RED="\033[0;31m"
 GREEN="\033[0;32m"
@@ -83,7 +86,7 @@ DRYRUN_SUMMARY=()
 cleanup() {
     # Only run cleanup if we're exiting with an error 
     # Since we handle package failures gracefully, we only want to cleanup on genuine errors
-    if [[ $? -ne 0 && $SCRIPT_COMPLETED_SUCCESSFULLY -ne 1 ]]; then
+    if [[ $? -ne 0 && ${SCRIPT_COMPLETED_SUCCESSFULLY:-0} -ne 1 ]]; then
         log_error "[!] Script failed or exited unexpectedly. Performing cleanup."
         # Add cleanup logic here if needed, e.g., removing temp files
     fi
