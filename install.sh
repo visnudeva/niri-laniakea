@@ -3,6 +3,13 @@
 set -e
 set -u
 
+# --- Color Output ---
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[1;33m"
+BLUE="\033[0;34m"
+NC="\033[0m"
+
 # Print ASCII logo
 echo -e "
 ${BLUE}
@@ -20,13 +27,6 @@ ${GREEN}A clean and simple Niri theme${NC}
 
 ${YELLOW}================================${NC}
 "
-
-# --- Color Output ---
-RED="\033[0;31m"
-GREEN="\033[0;32m"
-YELLOW="\033[1;33m"
-BLUE="\033[0;34m"
-NC="\033[0m"
 
 # --- Logging ---
 LOG_FILE="$HOME/niri-laniakea_$(date +%Y%m%d_%H%M%S).log"
