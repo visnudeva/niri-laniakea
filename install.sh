@@ -81,8 +81,10 @@ DRYRUN_SUMMARY=()
 
 # --- Trap for cleanup on errors ---
 cleanup() {
-    log_error "[!] Script failed or exited unexpectedly. Performing cleanup."
-    # Add cleanup logic here if needed, e.g., removing temp files
+    if [[ $? -ne 0 ]]; then
+        log_error "[!] Script failed or exited unexpectedly. Performing cleanup."
+        # Add cleanup logic here if needed, e.g., removing temp files
+    fi
 }
 trap cleanup EXIT
 
@@ -235,6 +237,9 @@ install_packages() {
     if (( DRYRUN )); then
         DRYRUN_SUMMARY+=("Would run: pacman -Syu --needed --noconfirm ${PACKAGES[*]}")
     else
+        # Temporarily disable exit-on-error for this section
+        set +e
+        
         # Force a database sync before installing packages individually
         $SUDO pacman -Sy --noconfirm
         
@@ -247,6 +252,9 @@ install_packages() {
                 log_error "[!] Failed to install package '$pkg', skipping..."
             fi
         done
+        
+        # Re-enable exit-on-error
+        set -e
     fi
 }
 
@@ -263,6 +271,9 @@ install_aur_packages() {
         if (( DRYRUN )); then
             DRYRUN_SUMMARY+=("Would run: $aur_helper -S --noconfirm ${AUR_PACKAGES[*]}")
         else
+            # Temporarily disable exit-on-error for this section
+            set +e
+            
             # Install AUR packages one by one to handle conflicts gracefully
             for aur_pkg in "${AUR_PACKAGES[@]}"; do
                 log_info "[+] Installing AUR package: $aur_pkg"
@@ -272,6 +283,9 @@ install_aur_packages() {
                     log_error "[!] Failed to install AUR package '$aur_pkg', skipping..."
                 fi
             done
+            
+            # Re-enable exit-on-error
+            set -e
         fi
     else
         log_error "[!] No AUR helper found. Skipping AUR package installation."
@@ -757,6 +771,8 @@ uninstall() {
             cp -r "$latest_backup" "$CONFIG_TARGET"
             log_success "[+] Restored original config from $latest_backup"
         fi
+        # Temporarily disable exit-on-error for this section
+        set +e
         # Remove packages one by one
         for pkg in "${PACKAGES[@]}"; do
             if pacman -Q "$pkg" &>/dev/null; then
@@ -773,6 +789,8 @@ uninstall() {
                 log_info "AUR package $aur_pkg was not installed, skipping removal."
             fi
         done
+        # Re-enable exit-on-error
+        set -e
         # Remove wallpaper
         rm -f "$WALLPAPER_DEST"
         # Remove GTK-Kvantum themes
@@ -859,8 +877,10 @@ main() {
     dryrun_summary
 
     log_success "\nAll done! Enjoy the fresh Niri-laniakea setup with a beautiful live wallpaper which will be generated at every boot after a few seconds or with Mod+L\n"
+    
+    # Remove trap since we're exiting successfully
+    trap - EXIT
+    exit 0
 }
 
 main
-
-trap - EXIT
