@@ -66,7 +66,7 @@ PACKAGES=(
     fish geany gvfs kitty kvantum kvantum-qt5 libnotify mako 
     network-manager-applet networkmanager nm-connection-editor 
     niri nwg-look pamixer pavucontrol pipewire pipewire-alsa 
-    pipewire-audio pipewire-jack pipewire-pulse polkit-gnome 
+    pipewire-audio pipewire-pulse polkit-gnome 
     qt5-graphicaleffects qt6-5compat qt6-wayland satty swww 
     swayidle swaylock thunar thunar-archive-plugin 
     thunar-media-tags-plugin thunar-volman udiskie waybar 
