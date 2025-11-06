@@ -81,7 +81,9 @@ DRYRUN_SUMMARY=()
 
 # --- Trap for cleanup on errors ---
 cleanup() {
-    if [[ $? -ne 0 ]]; then
+    # Only run cleanup if we're exiting with an error 
+    # Since we handle package failures gracefully, we only want to cleanup on genuine errors
+    if [[ $? -ne 0 && $SCRIPT_COMPLETED_SUCCESSFULLY -ne 1 ]]; then
         log_error "[!] Script failed or exited unexpectedly. Performing cleanup."
         # Add cleanup logic here if needed, e.g., removing temp files
     fi
@@ -237,24 +239,18 @@ install_packages() {
     if (( DRYRUN )); then
         DRYRUN_SUMMARY+=("Would run: pacman -Syu --needed --noconfirm ${PACKAGES[*]}")
     else
-        # Temporarily disable exit-on-error for this section
-        set +e
-        
         # Force a database sync before installing packages individually
-        $SUDO pacman -Sy --noconfirm
+        $SUDO pacman -Sy --noconfirm || true
         
         # Install packages one by one to handle conflicts gracefully
         for pkg in "${PACKAGES[@]}"; do
             log_info "[+] Installing package: $pkg"
-            if $SUDO pacman -S --needed --noconfirm "$pkg"; then
+            if $SUDO pacman -S --needed --noconfirm "$pkg" || true; then
                 log_success "[+] Package '$pkg' installed successfully."
             else
                 log_error "[!] Failed to install package '$pkg', skipping..."
             fi
         done
-        
-        # Re-enable exit-on-error
-        set -e
     fi
 }
 
@@ -271,21 +267,15 @@ install_aur_packages() {
         if (( DRYRUN )); then
             DRYRUN_SUMMARY+=("Would run: $aur_helper -S --noconfirm ${AUR_PACKAGES[*]}")
         else
-            # Temporarily disable exit-on-error for this section
-            set +e
-            
             # Install AUR packages one by one to handle conflicts gracefully
             for aur_pkg in "${AUR_PACKAGES[@]}"; do
                 log_info "[+] Installing AUR package: $aur_pkg"
-                if "$aur_helper" -S --noconfirm "$aur_pkg"; then
+                if "$aur_helper" -S --noconfirm "$aur_pkg" || true; then
                     log_success "[+] AUR package '$aur_pkg' installed successfully."
                 else
                     log_error "[!] Failed to install AUR package '$aur_pkg', skipping..."
                 fi
             done
-            
-            # Re-enable exit-on-error
-            set -e
         fi
     else
         log_error "[!] No AUR helper found. Skipping AUR package installation."
@@ -718,7 +708,7 @@ post_install_checks() {
     
     # Check if icon theme is set correctly
     local current_icon_theme
-    current_icon_theme=$(gsettings get org.gnome.desktop.interface icon-theme 2>/dev/null || echo "(command not available)")
+    current_icon_theme=$(gsettings get org.gnome.desktop.interface icon-theme 2>/dev/null || echo "(command not available)") || true
     if [[ "$current_icon_theme" == *Tela-circle* ]]; then
         log_success "Icon theme properly set to: $current_icon_theme"
     else
@@ -727,16 +717,16 @@ post_install_checks() {
     
     # Check if GTK theme is set correctly (try gsettings first, then config files)
     local current_gtk_theme
-    current_gtk_theme=$(gsettings get org.gnome.desktop.interface gtk-theme 2>/dev/null || echo "(command not available)")
+    current_gtk_theme=$(gsettings get org.gnome.desktop.interface gtk-theme 2>/dev/null || echo "(command not available)") || true
     if [[ "$current_gtk_theme" == *Laniakea*-Gtk* ]]; then
         log_success "GTK theme properly set to: $current_gtk_theme"
     else
         # If gsettings doesn't show the theme, check the config file
         local config_theme=""
         if [[ -f "$HOME/.config/gtk-3.0/settings.ini" ]]; then
-            config_theme=$(grep "gtk-theme-name" "$HOME/.config/gtk-3.0/settings.ini" | cut -d'=' -f2 | tr -d '"' | xargs)
+            config_theme=$(grep "gtk-theme-name" "$HOME/.config/gtk-3.0/settings.ini" | cut -d'=' -f2 | tr -d '"' | xargs || true)
         elif [[ -f "$HOME/.gtkrc-2.0" ]]; then
-            config_theme=$(grep "gtk-theme-name" "$HOME/.gtkrc-2.0" | cut -d'"' -f2)
+            config_theme=$(grep "gtk-theme-name" "$HOME/.gtkrc-2.0" | cut -d'"' -f2 || true)
         fi
         
         if [[ -n "$config_theme" && "$config_theme" == *Laniakea*-Gtk* ]]; then
@@ -771,8 +761,6 @@ uninstall() {
             cp -r "$latest_backup" "$CONFIG_TARGET"
             log_success "[+] Restored original config from $latest_backup"
         fi
-        # Temporarily disable exit-on-error for this section
-        set +e
         # Remove packages one by one
         for pkg in "${PACKAGES[@]}"; do
             if pacman -Q "$pkg" &>/dev/null; then
@@ -789,8 +777,6 @@ uninstall() {
                 log_info "AUR package $aur_pkg was not installed, skipping removal."
             fi
         done
-        # Re-enable exit-on-error
-        set -e
         # Remove wallpaper
         rm -f "$WALLPAPER_DEST"
         # Remove GTK-Kvantum themes
@@ -876,6 +862,8 @@ main() {
     post_install_checks
     dryrun_summary
 
+    # Set flag to indicate successful completion
+    SCRIPT_COMPLETED_SUCCESSFULLY=1
     log_success "\nAll done! Enjoy the fresh Niri-laniakea setup with a beautiful live wallpaper which will be generated at every boot after a few seconds or with Mod+L\n"
     
     # Remove trap since we're exiting successfully
