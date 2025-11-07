@@ -306,8 +306,10 @@ copy_dotfiles() {
     log_info "[+] Copying dotfiles to ~/.config..."
     if (( DRYRUN )); then
         DRYRUN_SUMMARY+=("Would run: rsync -avh --exclude='.git' \"$CONFIG_SOURCE/\" \"$CONFIG_TARGET/\"")
+        DRYRUN_SUMMARY+=("Would run: chmod +x \"$CONFIG_TARGET/fuzzel/fuzzel-logout.sh\"")
     else
         rsync -avh --exclude='.git' "$CONFIG_SOURCE/" "$CONFIG_TARGET/"
+        chmod +x "$CONFIG_TARGET/fuzzel/fuzzel-logout.sh"
     fi
 }
 
