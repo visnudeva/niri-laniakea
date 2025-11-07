@@ -1,5 +1,30 @@
 #!/bin/bash
 
+echo "Creating the wallpaper generation script..."
+
+# Create the directory if it doesn't exist
+mkdir -p ~/.config/laniakea-live-wallpaper
+
+# Copy the Python script to the new location
+cp "$(dirname "$0")/playwright_capture_wallpaper.py" ~/.config/laniakea-live-wallpaper/
+
+# Create a Python virtual environment and install required packages
+if [ ! -d ~/.config/laniakea-live-wallpaper/laniakea_env ]; then
+    echo "Creating Python virtual environment and installing required packages..."
+    python3 -m venv ~/.config/laniakea-live-wallpaper/laniakea_env
+    source ~/.config/laniakea-live-wallpaper/laniakea_env/bin/activate
+    pip install --upgrade pip
+    pip install playwright
+    playwright install chromium
+    deactivate
+else
+    echo "Virtual environment already exists."
+fi
+
+# Create a wrapper script that ensures the wallpaper is properly generated
+cat > ~/.config/laniakea-live-wallpaper/wallpaper_generator.sh << 'GENERATOR_EOF'
+#!/bin/bash
+
 # Wallpaper generator that handles timing issues on slower systems
 # First sets the cached wallpaper for immediate display, then generates a new one
 
@@ -69,3 +94,34 @@ else
     echo "ERROR: Wallpaper generator script not found at $WALLPAPER_GENERATOR"
     exit 1
 fi
+GENERATOR_EOF
+
+chmod +x ~/.config/laniakea-live-wallpaper/wallpaper_generator.sh
+
+echo "Updated wallpaper.service"
+
+# Update the wallpaper service to use the script
+cat > ~/.config/systemd/user/wallpaper.service << 'SERVICE_EOF'
+[Unit]
+Description=Generate random wallpaper with Playwright (faster execution, same visuals) and set via swww
+After=graphical-session.target swww-daemon.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sleep 5
+
+# Use the wallpaper generator script
+ExecStart=%h/.config/laniakea-live-wallpaper/wallpaper_generator.sh
+
+[Install]
+WantedBy=graphical-session.target
+SERVICE_EOF
+
+# Reload systemd configuration
+systemctl --user daemon-reload
+
+# Enable and start the wallpaper service
+systemctl --user enable wallpaper.service
+systemctl --user start wallpaper.service
+
+echo "Services have been reloaded, enabled, and started."
