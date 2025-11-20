@@ -1,30 +1,29 @@
 ignore-empty-password
 daemonize
 image=.config/swaylock/default.png
-color=1a161e
+color=cca9e8C0
 indicator-radius=200
-indicator-thickness=20
+indicator-thickness=40
 
-inside-color=1a161e00
-inside-clear-color=1a161e
-inside-ver-color=1a161e
-inside-wrong-color=1a161e
+inside-color=141414C0
+inside-clear-color=141414C0
+inside-ver-color=141414C0
+inside-wrong-color=141414C0
 
-key-hl-color=cca9e8aa
-bs-hl-color=d54e53aa
+key-hl-color=cca9e8C0
+bs-hl-color=cca9e8C0
 
-separator-color=55555555
+separator-color=141414C0
 
-line-color=1a161e
-line-uses-ring
+line-color=cca9e8C0
 
-text-color=cca9e8
-text-clear-color=b5bd68
-text-caps-lock-color=f0c674
-text-ver-color=cca9e8
+text-color=cca9e8C0
+text-clear-color=cca9e8C0
+text-caps-lock-color=cca9e8C0
+text-ver-color=cca9e8C0
 text-wrong-color=cc6666
 
-ring-color=cca9e855
-ring-ver-color=cca9e8
-ring-clear-color=b5bd6811
+ring-color=141414C0
+ring-ver-color=cca9e8C0
+ring-clear-color=cca9e8C0
 ring-wrong-color=cc6666
