@@ -26,6 +26,19 @@ cat > ~/.config/laniakea-live-wallpaper/wallpaper_generator.sh << 'GENERATOR_EOF
 #!/bin/bash
 
 # Wallpaper generator that handles timing issues on slower systems
+# Set environment variables for X11 if running under systemd
+if [ -z "$DISPLAY" ]; then
+    if [ -n "$XDG_RUNTIME_DIR" ]; then
+        export DISPLAY=":0"
+    fi
+fi
+
+if [ -z "$XAUTHORITY" ]; then
+    if [ -f "$HOME/.Xauthority" ]; then
+        export XAUTHORITY="$HOME/.Xauthority"
+    fi
+fi
+
 # First sets the cached wallpaper for immediate display, then generates a new one
 
 WALLPAPER_PATH="/tmp/Laniakea.png"
@@ -45,11 +58,11 @@ for i in {1..20}; do
     fi
 done
 
-# First, try to set the cached wallpaper for a smoother user experience
+# First, try to set the cached wallpaper immediately for a better user experience
 if [ -f "$CACHED_WALLPAPER" ] && [ -s "$CACHED_WALLPAPER" ]; then
-    echo "Setting cached wallpaper: $CACHED_WALLPAPER"
-    swww img "$CACHED_WALLPAPER" --transition-fps 60 --transition-duration 1 --transition-type grow
-    echo "Cached wallpaper set with transition."
+    echo "Setting cached wallpaper immediately: $CACHED_WALLPAPER"
+    swww img "$CACHED_WALLPAPER" --transition-fps 60 --transition-duration 0 --transition-type none
+    echo "Cached wallpaper set immediately."
 else
     echo "No cached wallpaper found at $CACHED_WALLPAPER, will generate new wallpaper first."
 fi
@@ -109,6 +122,9 @@ After=graphical-session.target swww-daemon.service
 [Service]
 Type=oneshot
 ExecStartPre=/bin/sleep 5
+    Environment=DISPLAY=:0
+    Environment=XAUTHORITY=%h/.Xauthority
+
 
 # Use the wallpaper generator script
 ExecStart=%h/.config/laniakea-live-wallpaper/wallpaper_generator.sh
@@ -120,8 +136,4 @@ SERVICE_EOF
 # Reload systemd configuration
 systemctl --user daemon-reload
 
-# Enable and start the wallpaper service
-systemctl --user enable wallpaper.service
-systemctl --user start wallpaper.service
-
-echo "Services have been reloaded, enabled, and started."
+echo "Services have been reloaded."
