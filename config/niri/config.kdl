@@ -134,7 +134,7 @@ layout {
     // You can change the default width of the new windows.
     // default-column-width { proportion 0.5; }
     // If you leave the brackets empty, the windows themselves will decide their initial width.
-    default-column-width { proportion 0.5; }
+    default-column-width { proportion 0.50; }
 
     // By default focus ring and border are rendered as a solid background rectangle
     // behind windows. That is, they will show up through semitransparent windows.
@@ -260,10 +260,10 @@ layout {
 // This line starts waybar, a commonly used bar for Wayland compositors.
 spawn-at-startup "waybar"
 spawn-at-startup "mako"
-// spawn-sh-at-startup "sleep 1 && swaybg -o eDP-1 -i \"$HOME/.config/niri/Laniakea.png\" -m fill"
+//spawn-sh-at-startup "sleep 1 && swaybg -o eDP-1 -i \"$HOME/.config/niri/Laniakea.png\" -m fill"
 
 spawn-at-startup "swayidle" "-w" "timeout" "600" "bash -c '[[ $(playerctl status 2>/dev/null) != Playing ]] && swaylock --daemonize && systemctl suspend'" "before-sleep" "swaylock --daemonize"
-// spawn-sh-at-startup "sleep 20 && ivpn connect -f"
+spawn-sh-at-startup "sleep 5 && ivpn connect -f"
 spawn-sh-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 
 spawn-at-startup "xwayland-satellite"
@@ -331,7 +331,30 @@ animations {
     // off
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
-    // slowdown 3.0
+    slowdown 2.0
+    
+	 workspace-switch {
+        spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
+    }
+    
+    horizontal-view-movement {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+    
+	window-open {
+        duration-ms 150
+        curve "ease-out-expo"
+    }
+
+    window-close {
+        duration-ms 150
+        curve "ease-out-quad"
+    }
+
+	overview-open-close {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
 
 }
 
@@ -370,6 +393,10 @@ window-rule {
     open-fullscreen true
 }
 window-rule {
+    match app-id="gimp"
+    opacity 1.0
+}
+window-rule {
     match app-id="qbittorrent"
     match app-id="thunar"
     match app-id="geany"
@@ -390,8 +417,9 @@ window-rule {
 }
 window-rule {
     match app-id="^thunar$" title="(Copying|Moving|File Operation Progress)"
+    default-floating-position x=10 y=10 relative-to="bottom-left"
     open-floating true
-    opacity 0.9
+    opacity 1.0
 }
 // Make inactive windows semitransparent.
 window-rule {
@@ -438,12 +466,12 @@ binds {
     Mod+SPACE hotkey-overlay-title="Open the menu: fuzzel" { spawn "fuzzel"; }
     Mod+B hotkey-overlay-title="Open the web browser: firefox" { spawn "firefox"; }
     Mod+I hotkey-overlay-title="Open the IDE: geany" { spawn "geany"; }
-    Mod+Z hotkey-overlay-title="Open the IDE: zed" { spawn "zeditor"; }
     Mod+F hotkey-overlay-title="Open the file manager: thunar" { spawn "thunar"; }
     Mod+E hotkey-overlay-title="Open the logout menu: fuzzel" { spawn-sh "~/.config/fuzzel/fuzzel-logout.sh"; }
 	// Mod+L hotkey-overlay-title="Lock the screen: swaylock" { spawn "swaylock"; }
-	Mod+W hotkey-overlay-title="Toggle Waybar" { spawn-sh "pgrep waybar && pkill waybar || setsid waybar"; }
-	Mod+S hotkey-overlay-title="Open Stremio" { spawn "stremio"; }
+	Mod+W hotkey-overlay-title="Toggle waybar" { spawn-sh "pgrep waybar && pkill waybar || setsid waybar"; }
+	Mod+S hotkey-overlay-title="Open stremio" { spawn "stremio"; }
+	Mod+Y hotkey-overlay-title="Open vacuumtube" { spawn "startvacuumtube"; }
 
 	// Mod+L hotkey-overlay-title="Reload Wallpaper Service" { spawn-sh "systemctl --user daemon-reload && systemctl --user restart wallpaper.service"; }
 	Mod+L hotkey-overlay-title="Reload Wallpaper Service" { spawn-sh "systemctl --user start wallpaper.service"; }
@@ -594,31 +622,31 @@ XF86MonBrightnessDown allow-when-locked=true {
     // will all refer to the 3rd workspace.
 
     Mod+1 {
-    spawn-sh "niri msg action focus-workspace 1; notify-send '	workspace 1'"
+    spawn-sh "niri msg action focus-workspace 1; notify-send ' workspace 1'"
 }
     Mod+2 {
-    spawn-sh "niri msg action focus-workspace 2; notify-send '	workspace 2'"
+    spawn-sh "niri msg action focus-workspace 2; notify-send ' workspace 2'"
 }
     Mod+3 {
-    spawn-sh "niri msg action focus-workspace 3; notify-send '	workspace 3'"
+    spawn-sh "niri msg action focus-workspace 3; notify-send ' workspace 3'"
 }
     Mod+4 {
-    spawn-sh "niri msg action focus-workspace 4; notify-send '	workspace 4'"
+    spawn-sh "niri msg action focus-workspace 4; notify-send ' workspace 4'"
 }
     Mod+5 {
-    spawn-sh "niri msg action focus-workspace 5; notify-send '	workspace 5'"
+    spawn-sh "niri msg action focus-workspace 5; notify-send ' workspace 5'"
 }
     Mod+6 {
-    spawn-sh "niri msg action focus-workspace 6; notify-send '	workspace 6'"
+    spawn-sh "niri msg action focus-workspace 6; notify-send ' workspace 6'"
 }
     Mod+7 {
-    spawn-sh "niri msg action focus-workspace 7; notify-send '	workspace 7'"
+    spawn-sh "niri msg action focus-workspace 7; notify-send ' workspace 7'"
 }
     Mod+8 {
-    spawn-sh "niri msg action focus-workspace 8; notify-send '	workspace 8'"
+    spawn-sh "niri msg action focus-workspace 8; notify-send ' workspace 8'"
 }
     Mod+9 {
-    spawn-sh "niri msg action focus-workspace 9; notify-send '	workspace 9'"
+    spawn-sh "niri msg action focus-workspace 9; notify-send ' workspace 9'"
 }
 
     //Mod+1 { focus-workspace 1; }
