@@ -71,7 +71,7 @@ PACKAGES=(
     niri nwg-look pamixer pavucontrol pipewire pipewire-alsa 
     pipewire-jack pipewire-audio pipewire-pulse polkit-gnome 
     qt5-graphicaleffects qt6-5compat qt6-wayland satty swww 
-    swayidle swaylock thunar thunar-archive-plugin 
+    swayidle swaylock thunar thunar-archive-plugin sddm
     thunar-media-tags-plugin thunar-volman udiskie waybar 
     wl-clipboard wireplumber xdg-desktop-portal-hyprland yay
 )
